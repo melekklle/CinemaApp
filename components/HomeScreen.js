@@ -1,20 +1,11 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  Dimensions,
-  ScrollView,
-  Image,
-  SafeAreaView,
-  TouchableOpacity,
-} from "react-native";
+import {View,Text,StyleSheet,FlatList,Dimensions,ScrollView,Image,SafeAreaView,TouchableOpacity,TextInput,} from "react-native";
 import * as Font from "expo-font";
 import AppLoading from "expo-app-loading";
+import { Feather, Ionicons } from "@expo/vector-icons";
 
 const WIDTH = Dimensions.get("window").width;
-
+//yazı fontu
 const fetchFonts = () => {
   return Font.loadAsync({
     "montserrat-regular": require("../assets/fonts/Montserrat-Regular.ttf"),
@@ -28,6 +19,12 @@ export default function HomeScreen() {
   const [allData, setAllData] = useState({ Search: [] });
   const [popular, setPopular] = useState({ Search: [] });
   const [trending, setTrending] = useState({ Search: [] });
+
+  const [searchPhrase, setSearchPhrase] = useState("");
+  const [clicked, setClicked] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("All");
+//katagoriler
+  const categories = ["All","Comedy","Animation","Dokumentary","Action","Drama",];
 
   useEffect(() => {
     fetchFonts()
@@ -50,7 +47,7 @@ export default function HomeScreen() {
       }
     });
   }, []);
-
+//api
   const fetchMovies = async (filmName) => {
     const url = `https://movie-database-alternative.p.rapidapi.com/?s=${filmName}&r=json&page=1`;
     const options = {
@@ -79,30 +76,51 @@ export default function HomeScreen() {
     const newIndex = Math.round(offsetX / WIDTH);
     setActiveIndex(newIndex);
   };
+//Search Bar
+  const SearchBar = ({ clicked, searchPhrase, setSearchPhrase, setClicked }) => {
+    return (
+      <View style={styles.containerView}>
+        <View style={clicked ? styles.searchBar__clicked : styles.searchBar__unclicked}>
+          <Feather name="search" size={20} color="#9FA5C0" />
+          <TextInput
+            style={styles.input}
+            placeholder="Search a title.."
+            placeholderTextColor="#9FA5C0"
+            value={searchPhrase}
+            onChangeText={setSearchPhrase}
+            onFocus={() => setClicked(false)}
+          />
+          <Ionicons name="settings" size={20} color="#9FA5C0" style={{ marginLeft: -55 }} />
+          <Text style={styles.or}>|</Text>
+        </View>
+      </View>
+    );
+  };
 
   return (
+    //sol üst profil kısmı 
     <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.container}>
-
         <View style={styles.profile}>
-          <Image
-            source={require("../assets/Image.png")}
-            style={styles.profilePic}
-          />
+          <Image source={require("../assets/Image.png")} style={styles.profilePic} />
           <View style={styles.profileText}>
             <Text style={styles.header}>Hello, Smith</Text>
             <Text style={styles.header2}>Let's stream your favorite movie</Text>
           </View>
           <TouchableOpacity style={styles.heartWrapper}>
-            <Image
-              source={require("../assets/heart.png")}
-              style={styles.heart}
-            />
+            <Image source={require("../assets/heart.png")} style={styles.heart} />
           </TouchableOpacity>
         </View>
-
-
+          
+        <SearchBar
+          clicked={clicked}
+          searchPhrase={searchPhrase}
+          setSearchPhrase={setSearchPhrase}
+          setClicked={setClicked}
+        />
+          
         <FlatList
+        //banner kısmı 
           data={allData.Search}
           keyExtractor={(item) => item.imdbID}
           horizontal
@@ -117,10 +135,7 @@ export default function HomeScreen() {
           renderItem={({ item }) => (
             <View style={styles.bannerWrapper}>
               <View style={styles.bannerItem}>
-                <Image
-                  source={{ uri: item.Poster }}
-                  style={styles.bannerImage}
-                />
+                <Image source={{ uri: item.Poster }} style={styles.bannerImage} />
                 <View style={styles.bannerTextContainer}>
                   <Text style={styles.bannerTitle}>{item.Title}</Text>
                   <Text style={styles.bannerDate}>On {item.Year}</Text>
@@ -129,19 +144,43 @@ export default function HomeScreen() {
             </View>
           )}
         />
-
+            {/*bannerdaki noktalar*/}
         <View style={styles.dotsContainer}>
           {allData.Search.map((_, index) => (
             <View
               key={index}
-              style={[
-                styles.dot,
-                activeIndex === index ? styles.activeDot : null,
-              ]}
+              style={[styles.dot, activeIndex === index && styles.activeDot]}
             />
           ))}
         </View>
-
+        <Text style={styles.categori}>Categories</Text>
+            {/*katagoriler*/}
+        <FlatList
+          data={categories}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item) => item}
+          contentContainerStyle={{ gap: 10, marginBottom: 10 }}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() => setSelectedCategory(item)}
+              style={[
+                styles.categoryButton,
+                selectedCategory === item && styles.categoryButtonActive,
+              ]}
+            >
+              <Text
+                style={[
+                  styles.categoryText,
+                  selectedCategory === item && styles.categoryTextActive,
+                ]}
+              >
+                {item}
+              </Text>
+            </TouchableOpacity>
+          )}
+        />
+        {/*popüler*/}
         <Text style={styles.sectionTitle}>Popular</Text>
         <FlatList
           horizontal
@@ -154,8 +193,7 @@ export default function HomeScreen() {
             </View>
           )}
         />
-
-
+          {/*trendler*/}
         <Text style={styles.sectionTitle}>Trending</Text>
         <FlatList
           horizontal
@@ -172,7 +210,7 @@ export default function HomeScreen() {
     </SafeAreaView>
   );
 }
-
+  {/*stiller*/}
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -221,7 +259,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: "montserrat-regular",
   },
-
   bannerWrapper: {
     width: WIDTH,
     justifyContent: "center",
@@ -231,11 +268,10 @@ const styles = StyleSheet.create({
     width: WIDTH - 40,
     backgroundColor: "#252836",
     borderRadius: 16,
-    overflow: 'visible',
   },
   bannerImage: {
     width: "100%",
-    height: 220,
+    aspectRatio: 300 / 445,
     borderRadius: 16,
   },
   bannerTextContainer: {
@@ -255,7 +291,6 @@ const styles = StyleSheet.create({
     fontFamily: "montserrat-regular",
     marginTop: 4,
   },
-
   dotsContainer: {
     flexDirection: "row",
     justifyContent: "center",
@@ -273,7 +308,6 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
   },
-
   sectionTitle: {
     color: "white",
     fontSize: 18,
@@ -283,6 +317,8 @@ const styles = StyleSheet.create({
   card: {
     width: 120,
     marginRight: 20,
+    backgroundColor: "#252836",
+    borderRadius: 12,
   },
   image: {
     width: 120,
@@ -293,6 +329,68 @@ const styles = StyleSheet.create({
     color: "white",
     marginTop: 5,
     fontSize: 12,
+    fontFamily: "montserrat-bold",
+  },
+  containerView: {
+    marginTop: 10,
+    marginBottom: 20,
+    justifyContent: "flex-start",
+    alignItems: "center",
+    flexDirection: "row",
+    width: "100%",
+  },
+  searchBar__unclicked: {
+    padding: 10,
+    flexDirection: "row",
+    width: "95%",
+    backgroundColor: "#252836",
+    borderRadius: 15,
+    alignItems: "center",
+  },
+  searchBar__clicked: {
+    padding: 10,
+    flexDirection: "row",
+    width: "100%",
+    backgroundColor: "#252836",
+    borderRadius: 15,
+    alignItems: "center",
+    justifyContent: "space-evenly",
+  },
+  input: {
+    fontSize: 15,
+    color: "#FFFFFF",
+    marginLeft: 10,
+    width: "100%",
+  },
+  or: {
+    marginLeft: -30,
+    color: "#9FA5C0",
+    fontSize: 25,
+    height: 30,
+  },
+  categori: {
+    fontSize: 25,
+    color: "white",
+    fontFamily: "montserrat-bold",
+    alignSelf: "flex-start",
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  categoryButton: {
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    backgroundColor: "#252836",
+    borderRadius: 20,
+  },
+  categoryButtonActive: {
+    backgroundColor: "#00C2FF",
+  },
+  categoryText: {
+    fontSize: 14,
     fontFamily: "montserrat-regular",
+    color: "white",
+  },
+  categoryTextActive: {
+    color: "#1F1D2B",
   },
 });
