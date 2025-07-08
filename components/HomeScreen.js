@@ -3,6 +3,7 @@ import {View,Text,StyleSheet,FlatList,Dimensions,ScrollView,Image,SafeAreaView,T
 import * as Font from "expo-font";
 import AppLoading from "expo-app-loading";
 import { Feather, Ionicons } from "@expo/vector-icons";
+import HomeSliderWidget from "../widget/HomeSliderWidget";
 
 const WIDTH = Dimensions.get("window").width;
 //yazı fontu
@@ -181,31 +182,10 @@ export default function HomeScreen() {
           )}
         />
         {/*popüler*/}
-        <Text style={styles.sectionTitle}>Popular</Text>
-        <FlatList
-          horizontal
-          data={popular.Search}
-          keyExtractor={(item) => item.imdbID}
-          renderItem={({ item }) => (
-            <View style={styles.card}>
-              <Image source={{ uri: item.Poster }} style={styles.image} />
-              <Text style={styles.title}>{item.Title}</Text>
-            </View>
-          )}
-        />
+       <HomeSliderWidget data={popular.Search} title="Popular"/>
           {/*trendler*/}
-        <Text style={styles.sectionTitle}>Trending</Text>
-        <FlatList
-          horizontal
-          data={trending.Search}
-          keyExtractor={(item) => item.imdbID}
-          renderItem={({ item }) => (
-            <View style={styles.card}>
-              <Image source={{ uri: item.Poster }} style={styles.image} />
-              <Text style={styles.title}>{item.Title}</Text>
-            </View>
-          )}
-        />
+       <HomeSliderWidget data={trending.Search} title="Trending"/>
+      
       </ScrollView>
     </SafeAreaView>
   );
@@ -265,7 +245,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   bannerItem: {
-    width: WIDTH - 40,
+    width: WIDTH - 80,
     backgroundColor: "#252836",
     borderRadius: 16,
   },
@@ -342,7 +322,7 @@ const styles = StyleSheet.create({
   searchBar__unclicked: {
     padding: 10,
     flexDirection: "row",
-    width: "95%",
+    width: "100%",
     backgroundColor: "#252836",
     borderRadius: 15,
     alignItems: "center",
@@ -361,6 +341,7 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     marginLeft: 10,
     width: "100%",
+    fontFamily: "montserrat-regular",
   },
   or: {
     marginLeft: -30,

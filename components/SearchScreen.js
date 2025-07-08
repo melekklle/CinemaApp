@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { 
-  View, Text, StyleSheet, FlatList, ScrollView, Image, 
-  SafeAreaView, TouchableOpacity, TextInput, Dimensions 
-} from "react-native";
+import {View,Text,StyleSheet,FlatList,ScrollView,Image,SafeAreaView,TouchableOpacity,TextInput,Dimensions} from "react-native";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
-
+import { useNavigation } from "@react-navigation/native";
+import HomeSliderWidget from "../widget/HomeSliderWidget";
 const WIDTH = Dimensions.get("window").width;
 
 export default function SearchScreen() {
   const [searchText, setSearchText] = useState("");
   const [todayMovie, setTodayMovie] = useState(null);
   const [recommendations, setRecommendations] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
   const categories = ["All", "Comedy", "Animation", "Dokumentary"];
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const navigation = useNavigation();
 
   useEffect(() => {
     fetchMovie("spiderman").then((res) => {
@@ -52,22 +51,22 @@ export default function SearchScreen() {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.container}>
 
-        {/* Search Bar */}
+        {/* search */}
         <View style={styles.searchBar}>
-          <Feather name="search" size={18} color="#999" />
+          <Feather name="search" size={18} color="#92929D" />
           <TextInput
-            placeholder="Type title,categories,years,etc"
-            placeholderTextColor={"#999"}
+            placeholder="Type title, categories, years, etc"
+            placeholderTextColor={"#92929D"}
             style={styles.input}
             value={searchText}
             onChangeText={setSearchText}
           />
         </View>
 
-        {/* Categories */}
-        <ScrollView 
-          horizontal={true} 
-          showsHorizontalScrollIndicator={false} 
+        {/*katagori */}
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.categories}
         >
           {categories.map((cat) => (
@@ -91,10 +90,15 @@ export default function SearchScreen() {
           ))}
         </ScrollView>
 
-        {/* Today */}
+        {/* today Movie */}
         <Text style={styles.sectionTitle}>Today</Text>
         {todayMovie && (
-          <View style={styles.todayCard}>
+          <TouchableOpacity
+            style={styles.todayCard}
+            onPress={() =>
+              navigation.navigate("MovieDetail", { movie: todayMovie })
+            }
+          >
             <Image
               source={{ uri: todayMovie.Poster }}
               style={styles.todayImage}
@@ -133,7 +137,8 @@ export default function SearchScreen() {
                   color="#9FA5C0"
                   style={{ marginRight: 4 }}
                 />
-                <Text style={styles.movieDetails}>Action | Movie</Text>
+                <Text style={styles.movieDetails}>Action |</Text>
+                <Text style={styles.movieDetailsM}> Movie</Text>
               </View>
             </View>
 
@@ -144,10 +149,10 @@ export default function SearchScreen() {
             <BlurView intensity={40} tint="light" style={styles.ratingBadge}>
               <Text style={styles.ratingText}>★ 4.5</Text>
             </BlurView>
-          </View>
+          </TouchableOpacity>
         )}
 
-        {/* Recommend For You */}
+        {/*recommend */}
         <View style={styles.recommendRow}>
           <Text style={styles.sectionTitle}>Recommend For You</Text>
           <TouchableOpacity>
@@ -155,23 +160,7 @@ export default function SearchScreen() {
           </TouchableOpacity>
         </View>
 
-        <FlatList
-          data={recommendations}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item) => item.imdbID}
-          renderItem={({ item }) => (
-            <View style={styles.recommendCard}>
-              <Image source={{ uri: item.Poster }} style={styles.recommendImage} />
-              <Text style={styles.recommendTitle}>
-                {item.Title.length > 15
-                  ? item.Title.slice(0, 15) + ".."
-                  : item.Title}
-              </Text>
-              <Text style={styles.recommendGenre}>Action</Text>
-            </View>
-          )}
-        />
+       <HomeSliderWidget data={recommendations} title="Recommend For You" description={true}/>
       </ScrollView>
     </SafeAreaView>
   );
@@ -256,13 +245,13 @@ const styles = StyleSheet.create({
     fontFamily: "montserrat-bold",
   },
   movieDetails: {
-    color: "#696974",
+    color: "#92929D",
     fontSize: 12,
     marginTop: 4,
     fontFamily: "montserrat-regular",
   },
-  movieGenre: {
-    color: "#00C2FF",
+  movieDetailsM: {
+    color: "white",
     fontSize: 12,
     marginTop: 4,
     fontFamily: "montserrat-regular",
@@ -305,7 +294,7 @@ const styles = StyleSheet.create({
   seeAll: {
     color: "#00C2FF",
     fontSize: 15,
-    fontFamily: "montserrat-regular",
+    fontFamily: "montserrat-bold",
   },
   recommendCard: {
     backgroundColor: "#252836",
