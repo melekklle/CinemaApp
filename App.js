@@ -11,6 +11,7 @@ import SearchScreen from './components/SearchScreen';
 import DownloadScreen from './components/DownloadScreen';
 import ProfileScreen from './components/ProfileScreen';
 import MovieDetail from './components/MovieDetail';
+import FilmDetail from './components/FilmDetail';
 {/**/}
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -38,6 +39,8 @@ function DownloadStack() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="DownloadScreen" component={DownloadScreen} />
+      <Stack.Screen name="FilmDetail" component={FilmDetail} />
+       <Stack.Screen name="MovieDetail" component={MovieDetail} />
     </Stack.Navigator>
   );
 }
@@ -50,6 +53,7 @@ function ProfileStack() {
     </Stack.Navigator>
   );
 }
+
 {/**/}
 export default function App() {
   return (
@@ -133,6 +137,6 @@ export default function App() {
 {/**/}
 const styles = StyleSheet.create({
   safeArea: {
-    backgroundColor: '#1F1D2B',
+    backgroundColor: "#171725",
   },
 });

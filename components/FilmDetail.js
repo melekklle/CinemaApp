@@ -6,7 +6,7 @@ import { BlurView } from "expo-blur";
 import { Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
-export default function MovieDetail () {
+export default function FilmDetail () {
     const route  = useRoute();
     const navigation = useNavigation();
     const {movie} = route.params;
@@ -82,8 +82,7 @@ export default function MovieDetail () {
     </View>
      <View style={styles.storySection}>
         <Text style={styles.storyTitle}>Cast And Crew</Text>
-        <Text style={styles.storyText}>Spider-Man is one of the most beloved superheroes in the world. The story follows Peter Parker, a young man who gains spider-like powers after being bitten by a radioactive spider. He struggles to balance his normal life with his responsibility to protect New York City. Spider-Man movies are famous for their exciting action scenes and emotional stories. Through his adventures, Spider-Man shows that with great power comes great responsibility.
-        </Text>
+        <Text style={styles.storyText}>Batman movies are some of the most popular superhero films in the world. They tell the story of Bruce Wayne, a billionaire who fights crime in Gotham City as Batman. Each movie explores his struggle between justice and vengeance. The films are known for their dark atmosphere and complex villains like the Joker and Bane. Overall, Batman movies continue to inspire audiences with their thrilling action and deep moral themes.</Text>
     </View>
     
     </ScrollView>
