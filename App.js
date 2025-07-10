@@ -12,6 +12,7 @@ import DownloadScreen from './components/DownloadScreen';
 import ProfileScreen from './components/ProfileScreen';
 import MovieDetail from './components/MovieDetail';
 import FilmDetail from './components/FilmDetail';
+import Wishlist from './components/Wishlist';
 {/**/}
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -20,6 +21,7 @@ function HomeStack() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
+      <Stack.Screen name='Wishlist' component={Wishlist}/>
     </Stack.Navigator>
   );
 }
@@ -53,6 +55,7 @@ function ProfileStack() {
     </Stack.Navigator>
   );
 }
+
 
 {/**/}
 export default function App() {
