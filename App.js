@@ -19,7 +19,7 @@ const Stack = createNativeStackNavigator();
 {/**/}
 function HomeStack() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator screenOptions={{ headerShown: false, animation: 'fade' }}>
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name='Wishlist' component={Wishlist}/>
     </Stack.Navigator>
@@ -40,7 +40,7 @@ function SearchStack() {
 function DownloadStack() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="DownloadScreen" component={DownloadScreen} />
+      <Stack.Screen name="    " component={DownloadScreen} />
       <Stack.Screen name="FilmDetail" component={FilmDetail} />
        <Stack.Screen name="MovieDetail" component={MovieDetail} />
     </Stack.Navigator>
@@ -51,7 +51,7 @@ function DownloadStack() {
 function ProfileStack() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+      <Stack.Screen name="ProfileScreen" component={ProfileScreen}/>
     </Stack.Navigator>
   );
 }
@@ -61,7 +61,7 @@ function ProfileStack() {
 export default function App() {
   return (
     <>
-      <StatusBar style="light" translucent={true} backgroundColor="transparent" />
+      
       <SafeAreaView style={styles.safeArea} />
 
       <NavigationContainer>
@@ -140,6 +140,6 @@ export default function App() {
 {/**/}
 const styles = StyleSheet.create({
   safeArea: {
-    backgroundColor: "#171725",
+    backgroundColor: "#1F1D2B",
   },
 });

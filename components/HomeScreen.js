@@ -129,6 +129,7 @@ export default function HomeScreen() {
           scrollEventThrottle={16}
           renderItem={({ item }) => (
             <TouchableOpacity
+            activeOpacity={1}
               onPress={() => navigation.navigate("Wishlist", { movie: item })}
               style={styles.bannerWrapper}
             >

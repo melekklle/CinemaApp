@@ -1,337 +1,342 @@
-import { useState } from "react";
-import { View,Text,StyleSheet,TouchableOpacity, ScrollView, ImageBackground, Modal,FlatList} from "react-native";
+import { useState, useLayoutEffect } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, FlatList, Image } from "react-native";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
 
-export default function Wishlist (props) {
-    const navigation = useNavigation();
-    const movie = props?.route?.params?.movie;
-     const [showShareModal,setShowShareModal]= useState(false);
-       // Cast and Crew data
-    const castData = [
-        { id: '1', name: 'Dario Russo', role: 'Director', image: require("../assets/Image.png") },
-        { id: '2', name: 'Dario Russo', role: 'Director and Writer', image: require("../assets/Image.png") },
-        { id: '3', name: 'David Ashby', role: 'Writer', image: require("../assets/Image.png") },
-        { id: '4', name: 'John Doe', role: 'Actor', image: require("../assets/Image.png") },
-        { id: '5', name: 'Jane Doe', role: 'Actress', image: require("../assets/Image.png") },
-    ];
+export default function Wishlist(props) {
+  const navigation = useNavigation();
+  const movie = props?.route?.params?.movie;
+  const [showShareModal, setShowShareModal] = useState(false);
 
-    return(
-       <Modal >
-        <ScrollView style={styles.container}>
- <BlurView intensity={100} tint="prominent" style={styles.backgroundPoster}>
-                     <Image source={{uri:movie?.Poster}}
-                style={styles.backgroundPoster}
-                resizeMode="cover"></Image>
-                   </BlurView>
-              <LinearGradient colors={['transparent','rgba(31,29,43,0.8)', 'rgba(31,29,43,1)']} style={styles.backgroundLinear}>
-       
-       
-        <View style={styles.headerRow}>
-            <TouchableOpacity onPress={()=> navigation.goBack()}>
-                <Ionicons name="arrow-back" size={24} color={"white"}/>
+  useLayoutEffect(() => {
+    navigation.getParent()?.setOptions({ tabBarStyle: { display: 'none' } });
+    return () => {
+      navigation.getParent()?.setOptions({
+        tabBarStyle: {
+          backgroundColor: '#1F1D2B',
+          borderTopWidth: 0,
+          height: 65,
+          paddingTop: 10,
+          paddingHorizontal: 45,
+        },
+      });
+    };
+  }, [navigation]);
+
+  const castData = [
+    { id: '1', name: 'Dario Russo', role: 'Director', image: require("../assets/Image.png") },
+    { id: '2', name: 'Dario Russo', role: 'Director and Writer', image: require("../assets/Image.png") },
+    { id: '3', name: 'David Ashby', role: 'Writer', image: require("../assets/Image.png") },
+    { id: '4', name: 'John Doe', role: 'Actor', image: require("../assets/Image.png") },
+    { id: '5', name: 'Jane Doe', role: 'Actress', image: require("../assets/Image.png") },
+  ];
+
+  return (
+    <View style={styles.container}>
+      <ScrollView>
+        <BlurView intensity={100} tint="dark" style={styles.backgroundPoster}>
+          <Image
+            source={{ uri: movie?.Poster }}
+            style={styles.backgroundPoster}
+            resizeMode="cover"
+          />
+        </BlurView>
+        <LinearGradient colors={['transparent', 'rgba(31,29,43,0.8)', 'rgba(31,29,43,1)']} style={styles.backgroundLinear}>
+          <View style={styles.headerRow}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Ionicons name="arrow-back" size={24} color={"white"} />
             </TouchableOpacity>
-            <Text style={styles.title}>Wishlist </Text>
+            <Text style={styles.title}>Wishlist</Text>
             <TouchableOpacity style={styles.heartWrapper}>
-            <Image source={require("../assets/heart.png")} style={styles.heart} />
+              <Image source={require("../assets/heart.png")} style={styles.heart} />
             </TouchableOpacity>
+          </View>
+
+          <View style={styles.posterContainer}>
+            <Image
+              source={{ uri: movie?.Poster }}
+              style={styles.poster}
+              resizeMode='cover'
+            />
+          </View>
+
+          <View style={styles.infoRow}>
+            <View style={styles.infoItem}>
+              <Ionicons name="calendar" size={16} color="#9FA5C0" />
+              <Text style={styles.infoText}>{movie?.Year}</Text>
+            </View>
+            <View style={styles.infoItem}>
+              <Ionicons name="time" size={16} color="#9FA5C0" />
+              <Text style={styles.infoText}>148 Minutes</Text>
+            </View>
+            <View style={styles.infoItem}>
+              <Ionicons name="film" size={16} color="#9FA5C0" />
+              <Text style={styles.infoText}>Action</Text>
+            </View>
+          </View>
+
+          <View style={styles.ratingContainer}>
+            <View style={styles.ratingBadge}>
+              <Text style={styles.ratingText}>★ 4.5</Text>
+            </View>
+          </View>
+
+          <View style={styles.buttonsRow}>
+            <TouchableOpacity style={styles.playButton}>
+              <Ionicons name="play" size={20} color={"white"} />
+              <Text style={styles.playText}>Play</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.iconButton}>
+              <Feather name="download" size={20} color={"white"} />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.iconButton} onPress={() => setShowShareModal(true)}>
+              <Feather name="share" size={20} color="#12CDD9" />
+            </TouchableOpacity>
+          </View>
+        </LinearGradient>
+
+        <View style={styles.storySection}>
+          <Text style={styles.storyTitle}>Story Line</Text>
+          <Text style={styles.storyText}>
+            For the first time in the cinematic history of Spider-Man, our friendly neighborhood hero's identity is revealed,
+            bringing his Super Hero responsibilities into conflict with his normal life and putting those he cares about most at risk.
+          </Text>
         </View>
 
-        <View style={styles.posterContainer}>
-            <Image 
-            source={{uri:movie?.Poster}} 
-            style={styles.poster}
-            resizeMode='cover'
-            />
-        </View>
-            <View style={styles.backgroundPosterContainer}>
-        
-            </View>
-        <View style={styles.infoRow}>
-            <View style={styles.infoItem}>
-                <Ionicons name="calendar" size="16" color="#9FA5C0"/>
-                <Text style={styles.infoText}>{movie?.Year}</Text>
-            </View>
-            <View style={styles.infoItem}>
-                <Ionicons name="time" size="16" color="#9FA5C0"/>
-                <Text style={styles.infoText}>148 Minutes</Text>
-            </View>
-            <View style={styles.infoItem}>
-                <Ionicons name="film" size="16" color="#9FA5C0"/>
-                <Text style={styles.infoText}>Action</Text>
-            </View>
-        </View>
-        
-    <View style={styles.ratingContainer}>
-        <View style={styles.ratingBadge}>
-            <Text style={styles.ratingText}>★ 4.5</Text>
-        </View>
-    </View> 
-    <View style={styles.buttonsRow}>
-        <TouchableOpacity style={styles.playButton}>
-            <Ionicons name="play" size={20} color={"white"}/>
-            <Text style={styles.playText}>Play</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.iconButton}>
-            <Feather name="download" size={20} color={"white"}/>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.iconButton}
-        onPress={() => setShowShareModal(true)}>
-            <Feather name="share" size={20} color="#12CDD9"/>
-        </TouchableOpacity>
-    </View>
-      </LinearGradient>
-          
-    <View style={styles.storySection}>
-        <Text style={styles.storyTitle}>Story Line</Text>
-        <Text style={styles.storyText}>For the first time in the cinematic history of Spider-Man, our friendly neighborhood hero's identity is revealed, bringing his Super Hero responsibilities into conflict with his normal life and putting those he cares about most at risk.</Text>
-    </View>
-     <View style={styles.storySection}>
-                         <Text style={styles.storyTitle}>Cast And Crew</Text>
-                         <FlatList
-                             data={castData}
-                             keyExtractor={(item) => item.id}
-                             horizontal
-                             showsHorizontalScrollIndicator={false}
-                             contentContainerStyle={{ paddingVertical: 10 }}
-                             renderItem={({ item }) => (
-                                 <View style={styles.castItem}>
-                                     <Image source={item.image} style={styles.castImage} />
-                                     <View style={styles.castTextContainer}>
-                                         <Text style={styles.header}>{item.name}</Text>
-                                         <Text style={styles.header2}>{item.role}</Text>
-                                     </View>
-                                 </View>
-                             )}
-                         />
-                          <View style={styles.epidose}>
-                         <Text style={styles.epidoseTitle}>Episode</Text>
-                     </View>
-                      </View>
-          </ScrollView>
-        
-          <Modal 
-          transparent
-          animationType="fade"
-          visible={showShareModal}
-          onRequestClose={()=>setShowShareModal(false)}>
-            <View style={styles.modalOverlay}>
-                <BlurView intensity={10} tint="default" style={styles.backgroundBlur}>
-                <View style={styles.shareBox}>
-                    
-                    <TouchableOpacity style={styles.closeButton} onPress={()=> setShowShareModal(false)}>
-                        <Ionicons name="close" size={24} color={'white'}/>
-                    </TouchableOpacity>
-                    <Text style={styles.shareTitle}>Share to</Text>
-                    <View style={styles.shareIcons}>
-                        <Ionicons name="logo-facebook" size={30} color={'#4267B2'} style={{margin:10}}/>
-                        <Ionicons name="logo-instagram" size={30} color={'#E1306C'} style={{margin:10}}/>
-                        <Ionicons name="logo-pinterest" size={30} color={'red'} style={{margin:10}}/>
-                        <Ionicons name="paper-plane-outline" size={30} color={'#00C2FF'} style={{margin:10}}/>
-                    
-                     </View>
-                     
+        <View style={styles.storySection}>
+          <Text style={styles.storyTitle}>Cast And Crew</Text>
+          <FlatList
+            data={castData}
+            keyExtractor={(item) => item.id}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ paddingVertical: 10 }}
+            renderItem={({ item }) => (
+              <View style={styles.castItem}>
+                <Image source={item.image} style={styles.castImage} />
+                <View style={styles.castTextContainer}>
+                  <Text style={styles.header}>{item.name}</Text>
+                  <Text style={styles.header2}>{item.role}</Text>
                 </View>
-                 </BlurView>
+              </View>
+            )}
+          />
+          <View style={styles.epidose}>
+            <Text style={styles.epidoseTitle}>Episode</Text>
+          </View>
+        </View>
+      </ScrollView>
+
+      {showShareModal && (
+        <View style={styles.absoluteOverlay}>
+          <BlurView intensity={80} tint="dark" style={styles.fullScreenBlur}>
+            <View style={styles.shareBox}>
+              <TouchableOpacity style={styles.closeButton} onPress={() => setShowShareModal(false)}>
+                <Ionicons name="close" size={30} color={'white'} />
+              </TouchableOpacity>
+              <Text style={styles.shareTitle}>Share to</Text>
+              <View style={styles.shareIcons}>
+                <Ionicons name="logo-facebook" size={35} color={'#4267B2'} style={{ margin: 10 }} />
+                <Ionicons name="logo-instagram" size={35} color={'#E1306C'} style={{ margin: 10 }} />
+                <Ionicons name="logo-pinterest" size={35} color={'red'} style={{ margin: 10 }} />
+                <Ionicons name="paper-plane-outline" size={35} color={'#00C2FF'} style={{ margin: 10 }} />
+              </View>
             </View>
-           
-          </Modal>
-        
-          </Modal>
-          
-          );
-      }
+          </BlurView>
+        </View>
+      )}
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
-  container: {
+  container: { 
     flex: 1,
-    backgroundColor: '#1F1D2B',
-  },
-  headerRow: {
+     backgroundColor: '#1F1D2B'
+     },
+  headerRow: { 
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    margin: 20,
-  },
+     justifyContent: 'space-between',
+      alignItems: 'center', 
+      margin: 20 
+    },
   title: {
-    color: 'white',
-    fontSize: 18,
-    fontFamily: 'montserrat-bold',
-  },
-  posterContainer: {
+     color: 'white',
+      fontSize: 18,
+       fontFamily: 'montserrat-bold'
+       },
+  posterContainer: { 
     alignItems: 'center',
-    marginBottom: 20,
-    margin:10,
-    marginTop:40,
-    
-  },
-   backgroundPosterContainer: {
-    alignItems: 'center',
-    justifyContent:'center',
-    marginBottom: 20,
-    position:'absolute',
-  },
-  poster: {
-    width: 220,
+     marginBottom: 20, 
+     margin: 10,
+      marginTop: 40 
+    },
+  poster: { 
+    width: 220, 
     height: 320,
-    borderRadius: 20,
-  },
-   backgroundPoster: {
-    width: "100%",
-    position: 'absolute',
-    height: 550,
-    opacity: 0.4
-   
-  },
+     borderRadius: 20 
+    },
+  backgroundPoster: {
+     width: "100%", 
+     position: 'absolute',
+      height: 550,
+       opacity: 0.4 
+      },
+  backgroundLinear: {
+     width: "100%"
+     },
   infoRow: {
+     flexDirection: 'row',
+      justifyContent: 'space-around',
+       marginBottom: 15
+       },
+  infoItem: { 
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 15,
-  },
-  infoItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  infoText: {
+     alignItems: 'center'
+     },
+  infoText: { 
     color: '#9FA5C0',
-    marginLeft: 6,
-    fontFamily: 'montserrat-regular',
+     marginLeft: 6,
+      fontFamily: 'montserrat-regular'
+     },
+  ratingContainer: { 
+    alignItems: 'center', 
+    marginBottom: 20 
   },
-  ratingContainer: {
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  ratingBadge: {
+  ratingBadge: { 
     backgroundColor: "#252836",
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    overflow:"hidden",
-    },
+     borderRadius: 10,
+      paddingHorizontal: 10,
+       paddingVertical: 5, 
+       overflow: "hidden"
+       },
   ratingText: {
-    color: '#FF8700',
-    fontSize: 16,
-    fontFamily: 'montserrat-bold',
-  },
+     color: '#FF8700',
+     fontSize: 16,
+      fontFamily: 'montserrat-bold' 
+    },
   buttonsRow: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 30,
-  },
-  playButton: {
+     flexDirection: 'row',
+      justifyContent: 'center',
+       alignItems: 'center', 
+       marginBottom: 30 
+      },
+  playButton: { 
     backgroundColor: '#FF8700',
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 30,
-    paddingHorizontal: 25,
-    paddingVertical: 12,
-    marginRight: 25,
-  },
-  playText: {
-    color: 'white',
+     flexDirection: 'row',
+      alignItems: 'center',
+      borderRadius: 30,
+       paddingHorizontal: 25,
+        paddingVertical: 12,
+         marginRight: 25 
+        },
+  playText: { 
+    color: 'white', 
     marginLeft: 8,
-    fontSize: 16,
-    fontFamily: 'montserrat-bold',
-  },
-  iconButton: {
+     fontSize: 16, 
+     fontFamily: 'montserrat-bold'
+     },
+  iconButton: { 
     backgroundColor: '#252836',
-    padding: 12,
-    borderRadius: 30,
-    marginHorizontal: 5,
-  },
-  storySection: {
+     padding: 12, 
+     borderRadius: 30, 
+     marginHorizontal: 5 
+    },
+  storySection: { 
     marginBottom: 20,
-    marginHorizontal:20,
-  },
-    storyTitle: {
-        color: 'white',
-        fontSize: 18,
-        fontFamily: 'montserrat-bold',
-        marginBottom: 8,
-    },
-    storyText: {
-        color: '#9FA5C0',
-        fontSize: 14,
-        fontFamily: 'montserrat-regular',
-        lineHeight: 22,
-    },
-backgroundLinear: {
-    width: "100%",
-},
-castItem: {
-        flexDirection: "row",
-        alignItems: "center",
-        borderRadius: 15,
-        padding: 10,
+     marginHorizontal: 20
+     },
+  storyTitle: { 
+    color: 'white', 
+    fontSize: 18, 
+    fontFamily: 'montserrat-bold',
+     marginBottom: 8
+     },
+  storyText: { 
+    color: '#9FA5C0',
+     fontSize: 14,
+      fontFamily: 'montserrat-regular',
+       lineHeight: 22 
+      },
+  castItem: { 
+    flexDirection: "row",
+     alignItems: "center",
+      borderRadius: 15,
+       padding: 10,
         marginRight: 15,
-        width: 150,
+         width: 150
+         },
+  castImage: {
+    width: 50,
+     height: 50, 
+     borderRadius: 25, 
+     marginRight: 10
+     },
+  castTextContainer: {
+     flexDirection: "column"
+     },
+  epidose: {
+     marginBottom: 10, 
+     marginHorizontal: 5 
     },
-    castImage: {
-        width: 50,
-        height: 50,
-        borderRadius: 25,
-        marginRight: 10,
+  epidoseTitle: { 
+    color: 'white',
+     fontSize: 18,
+      fontFamily: 'montserrat-bold',
+       marginBottom: 8
+       },
+  header: {
+     color: "white",
+      fontSize: 15, 
+      fontFamily: "montserrat-bold" 
     },
-    castTextContainer: {
-        flexDirection: "column",
+  header2: { 
+    color: "#92929D", 
+    fontSize: 12, 
+    fontFamily: "montserrat-regular"
+   },
+  absoluteOverlay: {
+     position: 'absolute', 
+     top: 0,
+      left: 0,
+       right: 0,
+        bottom: 0,
+         justifyContent: 'center',
+          alignItems: 'center',
+           zIndex: 9999 
+          },
+  fullScreenBlur: { 
+    position: 'absolute', 
+    top: 0,
+     left: 0,
+      right: 0,
+      bottom: 0,
+       justifyContent: 'center', 
+       alignItems: 'center' 
+      },
+  shareBox: {
+     backgroundColor: '#252836',
+      width: '90%', 
+      padding: 50,
+       borderRadius: 20,
+        alignItems: 'center'
+       },
+  closeButton: {
+     position: 'absolute',
+      top: 10,
+       right: 10 
+      },
+  shareTitle: { 
+    color: 'white', 
+    fontSize: 20,
+     fontFamily: 'montserrat-bold',
+      marginBottom: 15 
     },
-    epidose: {
-      marginBottom: 10,
-      marginHorizontal:5,
+  shareIcons: { 
+    flexDirection: 'row',
+     justifyContent: 'space-around',
+      width: '100%' 
     },
-    epidoseTitle:{
-      color: 'white',
-        fontSize: 18,
-        fontFamily: 'montserrat-bold',
-        marginBottom: 8,
-    },
-    header: {
-        color: "white",
-        fontSize: 15,
-        fontFamily: "montserrat-bold",
-    },
-    header2: {
-        color: "#92929D",
-        fontSize: 12,
-        fontFamily: "montserrat-regular",
-    },
-    modalOverlay: {
-    flex:1,
-    justifyContent:'center',
-    alignItems:'center',
-    },
-    shareBox: {
-        backgroundColor:'#252836',
-        width:'80%',
-        padding:20,
-        borderRadius:20,
-        alignItems:'center',
-    },
-    closeButton: {
-        position:'absolute',
-        top:10,
-        right:10,
-    },
-    shareTitle: {
-        color:'white',
-        fontSize:18,
-        fontFamily:'montserrat-bold',
-        marginBottom:20
-    },
-    shareIcons : {
-        flexDirection:'row',
-        justifyContent:'space-around',
-        width:'100%',
-    },
-  backgroundBlur: {
-    justifyContent:'center',
-    alignItems:'center',
-    flex:1,
-    width:'100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.80)', 
-  },
 });

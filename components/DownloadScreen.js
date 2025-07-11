@@ -76,7 +76,7 @@ export default function DownloadScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#171725",
+    backgroundColor: "#1F1D2B",
   },
   headerRow: {
     flexDirection: "row",

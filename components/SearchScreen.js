@@ -173,6 +173,7 @@ const styles = StyleSheet.create({
   },
   container: {
     padding: 16,
+    backgroundColor:'#1F1D2B',
   },
   searchBar: {
     flexDirection: "row",

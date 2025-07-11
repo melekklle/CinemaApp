@@ -1,14 +1,17 @@
+import { Ionicons } from "@expo/vector-icons";
 import React, { useState, useEffect } from "react";
-import { View, Text, FlatList } from "react-native";
+import {View,Text,SafeAreaView,ScrollView,StyleSheet,Image,TouchableOpacity,} from "react-native";
 
-export default function App() {
+export default function ProfileScreen() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        let response = await fetch('https://movie-database-alternative.p.rapidapi.com/?s=Avengers%20Endgame&r=json&page=1');
+        let response = await fetch(
+          "https://movie-database-alternative.p.rapidapi.com/?s=Avengers%20Endgame&r=json&page=1"
+        );
         let json = await response.json();
         setData(json);
       } catch (error) {
@@ -22,16 +25,280 @@ export default function App() {
   }, []);
 
   return (
-    <View>
-      {loading ? <Text>Loading...</Text> :
-        <FlatList
-          data={data}
-          keyExtractor={({ id }) => id.toString()}
-          renderItem={({ item }) => (
-            <Text>{item.title}</Text>
-          )}
-        />
-      }
-    </View>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView style={styles.container}>
+      <Text style={{fontSize:20,
+        fontFamily:'montserrat-bold',
+        color:'white',
+        alignSelf:'center',
+        justifyContent:'center',
+        marginBottom:15,
+      }}>Profile</Text>
+        <View style={styles.profile}>
+           <TouchableOpacity style={styles.premiumMember}>
+          <Image source={require("../assets/Tiffany.png")} style={styles.profilePic} />
+          <View style={styles.profileText}>
+            <Text style={styles.header}>Tiffany</Text>
+            <Text style={styles.header2}>Tiffanyjearsey@gmail.com</Text>
+          </View>
+          <TouchableOpacity style={{ marginLeft: 'auto', marginRight: 10 }}>
+            <Image source={require("../assets/pencil.png")} style={styles.pencil} />
+          </TouchableOpacity>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.premium}>
+         <TouchableOpacity style={styles.premiumMember}>
+          <View style={styles.rozetWrapper}>
+            <Ionicons name="ribbon-outline" size={35} color="white" />
+          </View>
+          <View style={styles.premiumText}>
+            <Text style={styles.headerPremium}>Premium Member</Text>
+            <Text style={styles.header2Premium}>New movies are coming for you,</Text>
+            <Text style={styles.header2Premium}>Download Now!</Text>
+          </View>
+          <View style={styles.circleEffect2}></View>
+          <View style={styles.circleEffect}></View>
+          </TouchableOpacity>
+        </View>
+
+        
+          <Text style={styles.sectionTitle}>Account</Text>
+        <TouchableOpacity style={styles.accountItem}>
+          
+          <View style={styles.itemContent}>
+            <View style={styles.iconBack}>
+              <Ionicons name="person" size={30} color={'aqua'} />
+            </View>
+            <Text style={styles.itemText}>Member</Text>
+          </View>
+          <Ionicons name="chevron-forward-outline" size={30} color={'aqua'} />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.accountItem}>
+          <View style={styles.itemContent}>
+            <View style={styles.iconBack}>
+              <Ionicons name="lock-closed-outline" size={30} color={'gray'} />
+            </View>
+            <Text style={styles.itemText}>Change Password</Text>
+          </View>
+          <Ionicons name="chevron-forward-outline" size={28} color={'aqua'} />
+        </TouchableOpacity>
+
+        <Text style={styles.sectionTitle}>General</Text>
+
+        <TouchableOpacity style={styles.accountItem}>
+          <View style={styles.itemContent}>
+            <View style={styles.iconBack}>
+              <Ionicons name="notifications-outline" size={30} color={'gray'} />
+            </View>
+            <Text style={styles.itemText}>Notification</Text>
+          </View>
+          <Ionicons name="chevron-forward-outline" size={30} color={'aqua'} />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.accountItem}>
+          <View style={styles.itemContent}>
+            <View style={styles.iconBack}>
+              <Ionicons name="globe-outline" size={30} color={'gray'} />
+            </View>
+            <Text style={styles.itemText}>Language</Text>
+          </View>
+          <Ionicons name="chevron-forward-outline" size={28} color={'aqua'} />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.accountItem}>
+          <View style={styles.itemContent}>
+            <View style={styles.iconBack}>
+              <Ionicons name="flag-outline" size={30} color={'gray'} />
+            </View>
+            <Text style={styles.itemText}>Country</Text>
+          </View>
+          <Ionicons name="chevron-forward-outline" size={28} color={'aqua'} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.accountItem}> 
+          <View style={styles.itemContent}>
+            <View style={styles.iconBack}>
+              <Ionicons name="trash-outline" size={30} color={'gray'} />
+            </View>
+            <Text style={styles.itemText}>Clear Cache</Text>
+          </View>
+          <Ionicons name="chevron-forward-outline" size={28} color={'aqua'} />
+        </TouchableOpacity>
+
+        <Text style={styles.sectionTitle}>More</Text>
+        <TouchableOpacity style={styles.accountItem}>
+                  <View style={styles.itemContent}>
+                    <View style={styles.iconBack}>
+                      <Ionicons name="shield-outline" size={30} color={'gray'} />
+                    </View>
+                    <Text style={styles.itemText}>Legal and Policies</Text>
+                  </View>
+                  <Ionicons name="chevron-forward-outline" size={30} color={'aqua'} />
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.accountItem}>
+                  <View style={styles.itemContent}>
+                    <View style={styles.iconBack}>
+                      <Ionicons name="help-circle-outline" size={30} color={'gray'} />
+                    </View>
+                    <Text style={styles.itemText}>Help & Feedback</Text>
+                  </View>
+                  <Ionicons name="chevron-forward-outline" size={30} color={'aqua'} />
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.accountItem}>
+                  <View style={styles.itemContent}>
+                    <View style={styles.iconBack}>
+                      <Ionicons name="information-circle-outline" size={30} color={'gray'} />
+                    </View>
+                    <Text style={styles.itemText}>About Us</Text>
+                  </View>
+                  <Ionicons name="chevron-forward-outline" size={30} color={'aqua'} />
+                </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#1F1D2B",
+  },
+  container: {
+    flex: 1,
+    backgroundColor: "#1F1D2B",
+    padding: 16,
+  },
+  profile: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
+    backgroundColor: "#1F1D2B",
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: "#494952",
+    padding:5,
+  },
+  profilePic: {
+    width: 70,
+    height: 70,
+    borderRadius: 25,
+  },
+  pencil: {
+    width: 20,
+    height: 20,
+    tintColor: "aqua",
+  },
+  profileText: {
+    flexDirection: "column",
+    flex: 1,
+    marginLeft: 10,
+  },
+  header: {
+    color: "white",
+    fontSize: 20,
+    fontFamily: "montserrat-bold",
+  },
+  header2: {
+    color: "#92929D",
+    fontSize: 15,
+    fontFamily: "montserrat-regular",
+  },
+  premium: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FF8700",
+    borderRadius: 20,
+    padding: 20,
+    overflow: "hidden",
+    position: "relative",
+    marginBottom: 20,
+  },
+  premiumText: {
+    flex: 1,
+    flexDirection: "column",
+  },
+  headerPremium: {
+    color: "white",
+    fontSize: 18,
+    fontFamily: "montserrat-bold",
+    marginBottom: 5,
+  },
+  header2Premium: {
+    color: "white",
+    fontSize: 14,
+    fontFamily: "montserrat-regular",
+  },
+  circleEffect2: {
+    position: "absolute",
+    right: -30,
+    top: -40,
+    width: 150,
+    height: 150,
+    backgroundColor: "rgba(255, 160, 51, 0.42)",
+    borderRadius: 100,
+    zIndex: -1,
+  },
+  circleEffect: {
+    position: "absolute",
+    right: -45,
+    top: -50,
+    width: 140,
+    height: 140,
+    backgroundColor: "rgba(254, 179, 93, 0.39)",
+    borderRadius: 100,
+    zIndex: -1,
+  },
+  rozetWrapper: {
+    width: 50,
+    height: 50,
+    backgroundColor: '#ffa642',
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 15,
+  },
+  iconBack:{
+    backgroundColor: "#252836",
+    width: 40,
+    height: 40, 
+    borderRadius: 100, 
+    justifyContent: "center",
+    alignItems: "center" 
+  },
+  accountItem: {
+    flexDirection:'row',
+    alignItems:'center',
+    justifyContent:'space-between',
+    backgroundColor:'#1E1F2D',
+    paddingVertical:15,
+    paddingHorizontal:20,
+    marginBottom:15,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: "#494952",
+  },
+  itemContent: {
+    flexDirection:'row', 
+    alignItems:'center'
+  },
+  itemText: {
+    color:'white', 
+    fontSize:17, 
+    marginLeft:15, 
+    fontFamily:'montserrat-bold'
+  },
+  sectionTitle: {
+    color:'white',
+    fontSize:25,
+    fontWeight:'bold',
+    marginBottom:15
+  },
+  premiumMember:{
+ flexDirection:'row',
+    alignItems:'center',
+    justifyContent:'space-between',
+  },
+});
