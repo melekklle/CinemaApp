@@ -11,7 +11,7 @@ export default function Wishlist(props) {
   const [showShareModal, setShowShareModal] = useState(false);
 
   useLayoutEffect(() => {
-    navigation.getParent()?.setOptions({ tabBarStyle: { display: 'none' } });
+    navigation.getParent()?.setOptions({});
     return () => {
       navigation.getParent()?.setOptions({
         tabBarStyle: {
