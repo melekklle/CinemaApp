@@ -12,8 +12,11 @@ import ProfileScreen from './components/ProfileScreen';
 import MovieDetail from './components/MovieDetail';
 import FilmDetail from './components/FilmDetail';
 import Wishlist from './components/Wishlist';
-import { ApiProvider } from '@reduxjs/toolkit/query/react';
-import { ThemeProvider } from 'styled-components';
+import FavoriteDetail from './components/FavoriteDetail';
+
+
+import { Provider } from 'react-redux';
+import { store } from './store/store';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -24,11 +27,12 @@ function HomeStack() {
       screenOptions={{
         headerShown: false,
         animation: 'fade',
-        contentStyle: { backgroundColor: '#1F1D2B' }, // arka plan koyu!!!
+        contentStyle: { backgroundColor: '#1F1D2B' },
       }}
     >
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="Wishlist" component={Wishlist} />
+      <Stack.Screen name="Favorite" component={FavoriteDetail}/>
     </Stack.Navigator>
   );
 }
@@ -38,6 +42,7 @@ function SearchStack() {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
+         animation: 'fade',
         contentStyle: { backgroundColor: '#1F1D2B' },
       }}
     >
@@ -52,6 +57,7 @@ function DownloadStack() {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
+         animation: 'fade',
         contentStyle: { backgroundColor: '#1F1D2B' },
       }}
     >
@@ -67,6 +73,7 @@ function ProfileStack() {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
+         animation: 'fade',
         contentStyle: { backgroundColor: '#1F1D2B' },
       }}
     >
@@ -90,80 +97,80 @@ const MyTheme = {
 
 export default function App() {
   return (
-  <ThemeProvider store={store}>
-    <SafeAreaView style={styles.safeArea}>
-      <NavigationContainer theme={MyTheme}>
-        <Tab.Navigator
-          screenOptions={({ route }) => ({
-            headerShown: false,
-            tabBarShowLabel: false,
-            tabBarStyle: {
-              backgroundColor: '#1F1D2B',
-              borderTopWidth: 0,
-              height: 65,
-              paddingTop: 10,
-              paddingHorizontal: 45,
-            },
-            tabBarIcon: ({ focused }) => {
-              let iconName = '';
-              let label = '';
+    <Provider store={store}>
+      <SafeAreaView style={styles.safeArea}>
+        <NavigationContainer theme={MyTheme}>
+          <Tab.Navigator
+            screenOptions={({ route }) => ({
+              headerShown: false,
+              tabBarShowLabel: false,
+              tabBarStyle: {
+                backgroundColor: '#1F1D2B',
+                borderTopWidth: 0,
+                height: 65,
+                paddingTop: 10,
+                paddingHorizontal: 45,
+              },
+              tabBarIcon: ({ focused }) => {
+                let iconName = '';
+                let label = '';
 
-              if (route.name === 'Home') {
-                iconName = 'home';
-                label = 'Home';
-              } else if (route.name === 'Search') {
-                iconName = 'search';
-                label = 'Search';
-              } else if (route.name === 'Download') {
-                iconName = 'download';
-                label = 'Download';
-              } else if (route.name === 'Profile') {
-                iconName = 'person';
-                label = 'Profile';
-              }
+                if (route.name === 'Home') {
+                  iconName = 'home';
+                  label = 'Home';
+                } else if (route.name === 'Search') {
+                  iconName = 'search';
+                  label = 'Search';
+                } else if (route.name === 'Download') {
+                  iconName = 'download';
+                  label = 'Download';
+                } else if (route.name === 'Profile') {
+                  iconName = 'person';
+                  label = 'Profile';
+                }
 
-              return (
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    backgroundColor: focused ? '#252836' : 'transparent',
-                    borderRadius: 20,
-                    width: 100,
-                    height: 38,
-                  }}
-                >
-                  <Ionicons
-                    name={iconName}
-                    size={25}
-                    color={focused ? '#00C2FF' : 'gray'}
-                  />
-                  {focused && (
-                    <Text
-                      style={{
-                        color: '#00C2FF',
-                        marginLeft: 2,
-                        fontSize: 15,
-                       fontFamily: 'montserrat-regular', 
-                      }}
-                    >
-                      {label}
-                    </Text>
-                  )}
-                </View>
-              );
-            },
-          })}
-        >
-          <Tab.Screen name="Home" component={HomeStack} />
-          <Tab.Screen name="Search" component={SearchStack} />
-          <Tab.Screen name="Download" component={DownloadStack} />
-          <Tab.Screen name="Profile" component={ProfileStack} />
-        </Tab.Navigator>
-      </NavigationContainer>
-    </SafeAreaView>
-    </ThemeProvider>
+                return (
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backgroundColor: focused ? '#252836' : 'transparent',
+                      borderRadius: 20,
+                      width: 100,
+                      height: 38,
+                    }}
+                  >
+                    <Ionicons
+                      name={iconName}
+                      size={25}
+                      color={focused ? '#00C2FF' : 'gray'}
+                    />
+                    {focused && (
+                      <Text
+                        style={{
+                          color: '#00C2FF',
+                          marginLeft: 2,
+                          fontSize: 15,
+                          fontFamily: 'montserrat-regular',
+                        }}
+                      >
+                        {label}
+                      </Text>
+                    )}
+                  </View>
+                );
+              },
+            })}
+          >
+            <Tab.Screen name="Home" component={HomeStack} />
+            <Tab.Screen name="Search" component={SearchStack} />
+            <Tab.Screen name="Download" component={DownloadStack} />
+            <Tab.Screen name="Profile" component={ProfileStack} />
+          </Tab.Navigator>
+        </NavigationContainer>
+      </SafeAreaView>
+    </Provider>
   );
 }
 

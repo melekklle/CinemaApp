@@ -1,15 +1,14 @@
-import { useState, useEffect} from "react";
+import { useState,useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, FlatList, Image } from "react-native";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
 
-export default function Wishlist(props) {
+export default function Favorite(props) {
   const navigation = useNavigation();
   const movie = props?.route?.params?.movie;
   const [showShareModal, setShowShareModal] = useState(false);
-
   useEffect(() => {
     navigation.getParent()?.setOptions({});
     return () => {
@@ -48,7 +47,7 @@ export default function Wishlist(props) {
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <Ionicons name="arrow-back" size={24} color={"white"} />
             </TouchableOpacity>
-            <Text style={styles.title}>Today Movie</Text>
+            <Text style={styles.title}>Favorite</Text>
             <TouchableOpacity style={styles.heartWrapper}>
               <Image source={require("../assets/heart.png")} style={styles.heart} />
             </TouchableOpacity>
