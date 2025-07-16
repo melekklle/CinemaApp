@@ -138,10 +138,18 @@ export default function Wishlist(props) {
               </TouchableOpacity>
               <Text style={styles.shareTitle}>Share to</Text>
               <View style={styles.shareIcons}>
+                <TouchableOpacity>
                 <Ionicons name="logo-facebook" size={35} color={'#4267B2'} style={{ margin: 10 }} />
+                </TouchableOpacity>
+                <TouchableOpacity>
                 <Ionicons name="logo-instagram" size={35} color={'#E1306C'} style={{ margin: 10 }} />
+                </TouchableOpacity>
+                <TouchableOpacity>
                 <Ionicons name="logo-pinterest" size={35} color={'red'} style={{ margin: 10 }} />
+                </TouchableOpacity>
+                <TouchableOpacity>
                 <Ionicons name="paper-plane-outline" size={35} color={'#00C2FF'} style={{ margin: 10 }} />
+                </TouchableOpacity>
               </View>
             </View>
           </BlurView>
