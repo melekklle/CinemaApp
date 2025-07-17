@@ -62,8 +62,8 @@ function DownloadStack() {
       }}
     >
       <Stack.Screen name="Download" component={DownloadScreen} />
-      <Stack.Screen name="FilmDetail" component={FilmDetail} />
-      <Stack.Screen name="MovieDetail" component={MovieDetail} />
+      <Stack.Screen name="FilmDetail" component={FilmDetail} options={{presentation: 'fullScreenModal'}}/>
+      <Stack.Screen name="MovieDetail" component={MovieDetail} options={{presentation: 'fullScreenModal'}}/>
     </Stack.Navigator>
   );
 }
