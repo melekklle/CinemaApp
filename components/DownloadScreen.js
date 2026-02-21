@@ -9,6 +9,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from "react-native";
 import { Ionicons, Feather } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function DownloadScreen({ navigation }) {
 
@@ -36,6 +37,14 @@ export default function DownloadScreen({ navigation }) {
      */
     const fetchMovies = async () => {
 
+      /**
+       * ✅ EKLENEN KISIM:
+       * API isteği için URL tanımlandı.
+       * Daha önce tanımlı olmadığı için "url doesn't exist" hatası alıyordun.
+       */
+      const url =
+        "https://movie-database-alternative.p.rapidapi.com/?s=batman&r=json";
+
       const options = {
         method: "GET",
         headers: {
@@ -43,7 +52,7 @@ export default function DownloadScreen({ navigation }) {
            * RapidAPI key header içinde gönderilir.
            * Güvenlik için normalde .env dosyasında tutulmalıdır.
            */
-          "x-rapidapi-key": "API_KEY",
+          "x-rapidapi-key": "06f4e582b0msh1e7308013f2fc09p17a14bjsnb865cf6ef178",
           "x-rapidapi-host": "movie-database-alternative.p.rapidapi.com",
         },
       };
@@ -54,6 +63,14 @@ export default function DownloadScreen({ navigation }) {
          * await -> işlem tamamlanana kadar bekler.
          */
         const response = await fetch(url, options);
+
+        /**
+         * Eğer response başarısızsa hata fırlatılır.
+         * Bu kontrol production için önemlidir.
+         */
+        if (!response.ok) {
+          throw new Error("API response failed");
+        }
 
         /**
          * JSON parse işlemi yapılır.
@@ -88,7 +105,7 @@ export default function DownloadScreen({ navigation }) {
      * contentContainerStyle alt boşluk eklemek için kullanılır.
      */
     <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 20 }}>
-
+  <SafeAreaView>
       {/* Header Bölümü */}
       <View style={styles.headerRow}>
 
@@ -109,13 +126,21 @@ export default function DownloadScreen({ navigation }) {
         {movies.map((item, index) => (
 
           <TouchableOpacity
-            key={item.imdbID}  // <-- unique key
+            key={item.imdbID}
             onPress={() => navigation.navigate("FilmDetail", { movie: item })}
             style={[styles.card, index === 0 && styles.activeCard]}
           >
 
             {/* Film Posteri */}
-            <Image source={{ uri: item.Poster }} style={styles.poster} />
+            <Image
+              source={{
+                uri:
+                  item.Poster !== "N/A"
+                    ? item.Poster
+                    : "https://via.placeholder.com/60"
+              }}
+              style={styles.poster}
+            />
 
             {/* Film Bilgi Alanı */}
             <View style={styles.info}>
@@ -154,7 +179,9 @@ export default function DownloadScreen({ navigation }) {
         ))}
 
       </View>
+      </SafeAreaView>
     </ScrollView>
+    
   );
 }
 

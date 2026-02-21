@@ -60,9 +60,9 @@ export default function ProfileScreen() {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.container}>
 
-        /**
+        {/**
          * SAYFA BAŞLIĞI
-         */
+         */}
         <Text style={{
           fontSize:20,
           fontFamily:'montserrat-bold',
@@ -73,10 +73,10 @@ export default function ProfileScreen() {
           Profile
         </Text>
 
-        /**
+        {/**
          * PROFIL KARTI
          * Kullanıcı adı + mail + düzenleme ikonu
-         */
+         */}
         <View style={styles.profile}>
           <TouchableOpacity style={styles.premiumMember}>
 
@@ -102,10 +102,10 @@ export default function ProfileScreen() {
           </TouchableOpacity>
         </View>
 
-        /**
+        {/**
          * PREMIUM ÜYELİK KARTI
          * Turuncu arka plan + dekoratif circle efektleri
-         */
+         */}
         <View style={styles.premium}>
           <TouchableOpacity style={styles.premiumMember}>
 
@@ -123,23 +123,22 @@ export default function ProfileScreen() {
               </Text>
             </View>
 
-            /**
+            {/**
              * Arka plan dairesel efektler
-             */
+             */}
             <View style={styles.circleEffect2}></View>
             <View style={styles.circleEffect}></View>
 
           </TouchableOpacity>
         </View>
 
-        /**
+        {/**
          * ACCOUNT SECTION
-         */
+         */}
         <Text style={styles.sectionTitle}>Account</Text>
-
-        /**
+       {/**
          * Account Menü Item
-         */
+         */}
         <TouchableOpacity style={styles.accountItem}>
           <View style={styles.itemContent}>
             <View style={styles.iconBack}>
@@ -160,9 +159,9 @@ export default function ProfileScreen() {
           <Ionicons name="chevron-forward-outline" size={28} color={'aqua'} />
         </TouchableOpacity>
 
-        /**
+        {/**
          * GENERAL SECTION
-         */
+         */}
         <Text style={styles.sectionTitle}>General</Text>
 
         <TouchableOpacity style={styles.accountItem}>
@@ -205,9 +204,9 @@ export default function ProfileScreen() {
           <Ionicons name="chevron-forward-outline" size={28} color={'aqua'} />
         </TouchableOpacity>
 
-        /**
+        {/**
          * MORE SECTION
-         */
+         */}
         <Text style={styles.sectionTitle}>More</Text>
 
         <TouchableOpacity style={styles.accountItem}>

@@ -73,11 +73,11 @@ export default function Wishlist(props) {
     <View style={styles.container}>
       <ScrollView>
 
-        /**
+        {/**
          * BlurView:
          * Arka planı bulanık göstermek için kullanılır.
          * Poster resmi arka plana yerleştirilmiştir.
-         */
+         */}
         <BlurView intensity={100} tint="dark" style={styles.backgroundPoster}>
           <Image
             source={{ uri: movie?.Poster }}
@@ -86,11 +86,11 @@ export default function Wishlist(props) {
           />
         </BlurView>
 
-        /**
+       { /**
          * LinearGradient:
          * Arka plan geçiş efekti sağlar.
          * Üstten alta doğru koyulaşma efekti verir.
-         */
+         */}
         <LinearGradient
           colors={['transparent', 'rgba(31,29,43,0.8)', 'rgba(31,29,43,1)']}
           style={styles.backgroundLinear}
@@ -144,27 +144,27 @@ export default function Wishlist(props) {
           {/* Butonlar */}
           <View style={styles.buttonsRow}>
 
-            /**
+           { /**
              * Play butonu:
              * Şu an sadece UI amaçlı.
-             */
+             */}
             <TouchableOpacity style={styles.playButton}>
               <Ionicons name="play" size={20} color={"white"} />
               <Text style={styles.playText}>Play</Text>
             </TouchableOpacity>
 
-            /**
+            {/**
              * Download butonu:
              * UI temsilidir.
-             */
+             */}
             <TouchableOpacity style={styles.iconButton}>
               <Feather name="download" size={20} color={"white"} />
             </TouchableOpacity>
 
-            /**
+            {/**
              * Share butonu:
              * setShowShareModal(true) ile modal açılır.
-             */
+             */}
             <TouchableOpacity
               style={styles.iconButton}
               onPress={() => setShowShareModal(true)}
@@ -186,11 +186,11 @@ export default function Wishlist(props) {
         <View style={styles.storySection}>
           <Text style={styles.storyTitle}>Cast And Crew</Text>
 
-          /**
+          {/**
            * FlatList:
            * Performanslı liste render etmek için kullanılır.
            * keyExtractor her item için unique id döndürür.
-           */
+           */}
           <FlatList
             data={castData}
             keyExtractor={(item) => item.id}
@@ -210,10 +210,10 @@ export default function Wishlist(props) {
         </View>
       </ScrollView>
 
-      /**
+      {/**
        * Conditional Rendering:
        * Eğer showShareModal true ise share modal gösterilir.
-       */
+       */}
       {showShareModal && (
         <View style={styles.absoluteOverlay}>
           <BlurView intensity={80} tint="dark" style={styles.fullScreenBlur}>

@@ -8,12 +8,13 @@
  * - Favori yoksa boş ekran gösterir
  */
 
-import React, { useEffect } from "react";
+import React, { useEffect } from "react"; 
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleFavorite } from "../store/favoriteSlice";
+import { SafeAreaView } from "react-native-safe-area-context"; 
 
 export default function Wishlist() {
 
@@ -39,6 +40,11 @@ export default function Wishlist() {
    */
   useEffect(() => {
 
+    // ✅ TAB BAR GİZLEME EKLENDİ
+    navigation.getParent()?.setOptions({
+      tabBarStyle: { display: "none" }
+    });
+
     return () => {
       navigation.getParent()?.setOptions({
         tabBarStyle: {
@@ -59,12 +65,13 @@ export default function Wishlist() {
 
     <View style={styles.card}>
 
-      /**
+      {/**
        * Film detay ekranına navigation
-       */
+       */}
       <TouchableOpacity
         onPress={() =>
-      navigation.navigate("FavoriteDetail", { movie: item })        }
+          navigation.navigate("FavoriteDetail", { movie: item })
+        }
       >
 
         <Image
@@ -72,13 +79,13 @@ export default function Wishlist() {
           style={styles.image}
         />
 
-        /**
+        {/**
          * Favoriden çıkarma butonu
          * Redux dispatch çalışır
-         */
+         */}
         <TouchableOpacity
           onPress={() => dispatch(toggleFavorite(item))}
-          style={{ position: 'absolute', top: 25, right: 25 }}
+          style={styles.heartButton}
         >
           <Ionicons name="heart" size={25} color="red" />
         </TouchableOpacity>
@@ -91,24 +98,27 @@ export default function Wishlist() {
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
 
-      /**
+      {/**
        * HEADER
-       */
+       */}
       <View style={styles.headerRow}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.canGoBack()
+              ? navigation.goBack()
+              : navigation.getParent()?.navigate("Home")
+          }
+        >
           <Ionicons name="arrow-back" size={24} color={"white"} />
         </TouchableOpacity>
 
-        <Text style={styles.titleHeader}>Favorite</Text>
+        <Text style={styles.titleHeader}>Favoriler</Text>
 
         <View style={{ width: 24 }} />
       </View>
 
-      /**
-       * Eğer favori listesi boşsa boş mesaj göster
-       */
       {favorites.length === 0 ? (
 
         <View style={styles.emptyContainer}>
@@ -119,9 +129,6 @@ export default function Wishlist() {
 
       ) : (
 
-        /**
-         * Favori filmler listesi
-         */
         <FlatList
           data={favorites}
           keyExtractor={(item) => item.imdbID}
@@ -134,22 +141,29 @@ export default function Wishlist() {
 
       )}
 
-    </View>
+    </SafeAreaView>
   );
 }
+
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#1F1D2B' },
+  container: {
+    flex: 1,
+    backgroundColor: '#1F1D2B'
+  },
+
   headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     margin: 20
   },
+
   titleHeader: {
     color: 'white',
     fontSize: 18,
     fontFamily: 'montserrat-bold'
   },
+
   card: {
     backgroundColor: '#252836',
     borderRadius: 15,
@@ -157,28 +171,39 @@ const styles = StyleSheet.create({
     padding: 20,
     position: 'relative'
   },
+
   image: {
-    width: 'auto',
+    width: '100%', // ✅ düzeltildi
     height: 300,
     borderRadius: 15
   },
+
+  heartButton: {
+    position: 'absolute',
+    top: 25,
+    right: 25
+  },
+
   title: {
     color: 'white',
     fontSize: 20,
     fontFamily: 'montserrat-bold',
     marginTop: 10
   },
+
   year: {
     color: '#9FA5C0',
     fontSize: 18,
     fontFamily: 'montserrat-regular',
     marginTop: 4
   },
+
   emptyContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
   },
+
   emptyText: {
     color: '#9FA5C0',
     fontSize: 20,

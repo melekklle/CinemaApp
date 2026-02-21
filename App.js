@@ -128,10 +128,10 @@ export default function App() {
      */
     <Provider store={store}>
 
-      /**
+      {/**
        * PersistGate:
        * AsyncStorage'dan state yüklenene kadar bekler
-       */
+       */}
 
       <PersistGate loading={null} persistor={persistor}>
 

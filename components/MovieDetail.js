@@ -74,10 +74,10 @@ export default function Wishlist(props) {
 
       <ScrollView>
 
-        /**
+        {/**
          * ARKA PLAN POSTER
          * Blur efekti uygulanmış
-         */
+         */}
         <BlurView intensity={100} tint="dark" style={styles.backgroundPoster}>
           <Image
             source={{ uri: movie?.Poster }}
@@ -86,19 +86,19 @@ export default function Wishlist(props) {
           />
         </BlurView>
 
-        /**
+        {/**
          * LinearGradient:
          * Poster üstüne koyu geçiş efekti verir.
-         */
+         */}
         <LinearGradient
           colors={['transparent', 'rgba(31,29,43,0.8)', 'rgba(31,29,43,1)']}
           style={styles.backgroundLinear}
         >
 
-          /**
+          {/**
            * HEADER ROW
            * Geri butonu + Başlık + Favori
-           */
+           */}
           <View style={styles.headerRow}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <Ionicons name="arrow-back" size={24} color={"white"} />
@@ -111,9 +111,9 @@ export default function Wishlist(props) {
             </TouchableOpacity>
           </View>
 
-          /**
+          {/**
            * Film Poster Görseli
-           */
+           */}
           <View style={styles.posterContainer}>
             <Image
               source={{ uri: movie?.Poster }}
@@ -122,10 +122,10 @@ export default function Wishlist(props) {
             />
           </View>
 
-          /**
+          {/**
            * Film Bilgi Satırı
            * Yıl, Süre, Tür
-           */
+           */}
           <View style={styles.infoRow}>
             <View style={styles.infoItem}>
               <Ionicons name="calendar" size={16} color="#9FA5C0" />
@@ -143,19 +143,19 @@ export default function Wishlist(props) {
             </View>
           </View>
 
-          /**
+          {/**
            * Rating Badge
-           */
+           */}
           <View style={styles.ratingContainer}>
             <View style={styles.ratingBadge}>
               <Text style={styles.ratingText}>★ 4.5</Text>
             </View>
           </View>
 
-          /**
+          {/**
            * Action Buttons:
            * Play - Download - Share
-           */
+           */}
           <View style={styles.buttonsRow}>
 
             <TouchableOpacity style={styles.playButton}>
@@ -177,9 +177,9 @@ export default function Wishlist(props) {
           </View>
         </LinearGradient>
 
-        /**
+        {/**
          * STORY LINE SECTION
-         */
+         */}
         <View style={styles.storySection}>
           <Text style={styles.storyTitle}>Story Line</Text>
           <Text style={styles.storyText}>
@@ -187,10 +187,10 @@ export default function Wishlist(props) {
           </Text>
         </View>
 
-        /**
+        {/**
          * CAST & CREW SECTION
          * Horizontal FlatList
-         */
+         */}
         <View style={styles.storySection}>
           <Text style={styles.storyTitle}>Cast And Crew</Text>
 
@@ -213,10 +213,10 @@ export default function Wishlist(props) {
 
       </ScrollView>
 
-      /**
+      {/**
        * SHARE MODAL
        * showShareModal true ise render edilir.
-       */
+       */}
       {showShareModal && (
         <View style={styles.absoluteOverlay}>
           <BlurView intensity={80} tint="dark" style={styles.fullScreenBlur}>

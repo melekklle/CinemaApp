@@ -73,7 +73,7 @@ export default function Favorite(props) {
 
       {/* ScrollView -> Sayfa scroll edilebilir */}
       <ScrollView>
-
+      
         {/**
          * BlurView -> Arka planı bulanık yapar.
          * Poster resmi arka plan olarak kullanılmıştır.

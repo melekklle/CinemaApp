@@ -87,7 +87,7 @@ export default function SearchScreen() {
     const options = {
       method: "GET",
       headers: {
-        "x-rapidapi-key": "API_KEY",
+        "x-rapidapi-key": "06f4e582b0msh1e7308013f2fc09p17a14bjsnb865cf6ef178",
         "x-rapidapi-host": "movie-database-alternative.p.rapidapi.com",
       },
     };
@@ -106,9 +106,9 @@ export default function SearchScreen() {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.container}>
 
-        /**
+        {/**
          * SEARCH BAR
-         */
+         */}
         <View style={styles.searchBar}>
           <Feather name="search" size={18} color="#92929D" />
           <TextInput
@@ -120,9 +120,9 @@ export default function SearchScreen() {
           />
         </View>
 
-        /**
+        {/**
          * CATEGORY SCROLL
-         */
+         */}
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -149,9 +149,9 @@ export default function SearchScreen() {
           ))}
         </ScrollView>
 
-        /**
+        {/**
          * TODAY MOVIE SECTION
-         */
+         */}
         <Text style={styles.sectionTitle}>Today</Text>
 
         {todayMovie && (
@@ -166,9 +166,9 @@ export default function SearchScreen() {
               style={styles.todayImage}
             />
 
-            /**
+            {/**
              * Film Bilgileri
-             */
+             */}
             <View style={styles.todayInfo}>
 
               <Text style={styles.todayTitle}>
@@ -195,16 +195,16 @@ export default function SearchScreen() {
 
             </View>
 
-            /**
+            {/**
              * Premium Badge
-             */
+             */}
             <View style={styles.premiumBadge}>
               <Text style={styles.premiumText}>Premium</Text>
             </View>
 
-            /**
+            {/**
              * Rating Badge (Blur efekti)
-             */
+             */}
             <BlurView intensity={40} tint="light" style={styles.ratingBadge}>
               <Text style={styles.ratingText}>★ 4.5</Text>
             </BlurView>
@@ -212,9 +212,9 @@ export default function SearchScreen() {
           </TouchableOpacity>
         )}
 
-        /**
+        {/**
          * RECOMMEND SECTION
-         */
+         */}
         <View style={styles.recommendRow}>
           <Text style={styles.sectionTitle}>Recommend For You</Text>
           <TouchableOpacity>
@@ -222,10 +222,10 @@ export default function SearchScreen() {
           </TouchableOpacity>
         </View>
 
-        /**
+        {/**
          * Custom Widget
          * HomeSliderWidget reusable component
-         */
+         */}
         <HomeSliderWidget
           data={recommendations}
           title="Recommend For You"
