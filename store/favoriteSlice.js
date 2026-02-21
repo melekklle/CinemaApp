@@ -1,22 +1,39 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+/**
+ * favoritesSlice
+ *
+ * Favori filmleri global state'te tutar.
+ * toggleFavorite:
+ *   - Eğer film favorilerde varsa çıkarır
+ *   - Yoksa ekler
+ */
+
 const favoritesSlice = createSlice({
   name: 'favorites',
   initialState: [],
   reducers: {
+
     toggleFavorite(state, action) {
+
       const existingIndex = state.findIndex(
         item => item.imdbID === action.payload.imdbID
       );
-      if (existingIndex >= 0) {
+
+      // Eğer film zaten favorilerde varsa sil
+      if (existingIndex !== -1) {
         state.splice(existingIndex, 1);
-      } else {
+      } 
+      // Yoksa favorilere ekle
+      else {
         state.push(action.payload);
       }
     },
-    clearFavorites(state) {
+
+    clearFavorites() {
       return [];
     },
+
   },
 });
 

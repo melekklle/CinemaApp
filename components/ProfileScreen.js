@@ -1,19 +1,50 @@
+/**
+ * ProfileScreen
+ *
+ * Bu ekran:
+ * - Kullanıcı profil bilgilerini gösterir
+ * - Premium üyelik kartı içerir
+ * - Account & General ayar menülerini listeler
+ * - useEffect ile örnek API çağrısı yapar (şu an UI'da kullanılmıyor)
+ */
+
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState, useEffect } from "react";
-import {View,Text,SafeAreaView,ScrollView,StyleSheet,Image,TouchableOpacity,} from "react-native";
-
+import {View,Text,ScrollView,StyleSheet,Image,TouchableOpacity,} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 export default function ProfileScreen() {
+
+  /**
+   * API'den gelen veri state
+   * (Şu an UI içinde kullanılmıyor)
+   */
   const [data, setData] = useState([]);
+
+  /**
+   * Loading state
+   */
   const [loading, setLoading] = useState(true);
 
+  /**
+   * useEffect:
+   * Component mount olduğunda API çağrısı yapar.
+   * Avengers Endgame verisini çeker.
+   */
   useEffect(() => {
+
     const fetchData = async () => {
       try {
+
+        /**
+         * API çağrısı (headers eksik - RapidAPI key yok)
+         */
         let response = await fetch(
           "https://movie-database-alternative.p.rapidapi.com/?s=Avengers%20Endgame&r=json&page=1"
         );
+
         let json = await response.json();
         setData(json);
+
       } catch (error) {
         console.error(error);
       } finally {
@@ -22,50 +53,94 @@ export default function ProfileScreen() {
     };
 
     fetchData();
+
   }, []);
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.container}>
-      <Text style={{fontSize:20,
-        fontFamily:'montserrat-bold',
-        color:'white',
-        alignSelf:'center',
-        justifyContent:'center',
-        marginBottom:15,
-      }}>Profile</Text>
+
+        /**
+         * SAYFA BAŞLIĞI
+         */
+        <Text style={{
+          fontSize:20,
+          fontFamily:'montserrat-bold',
+          color:'white',
+          alignSelf:'center',
+          marginBottom:15,
+        }}>
+          Profile
+        </Text>
+
+        /**
+         * PROFIL KARTI
+         * Kullanıcı adı + mail + düzenleme ikonu
+         */
         <View style={styles.profile}>
-           <TouchableOpacity style={styles.premiumMember}>
-          <Image source={require("../assets/Tiffany.png")} style={styles.profilePic} />
-          <View style={styles.profileText}>
-            <Text style={styles.header}>Tiffany</Text>
-            <Text style={styles.header2}>Tiffanyjearsey@gmail.com</Text>
-          </View>
-          <TouchableOpacity style={{ marginLeft: 'auto', marginRight: 10 }}>
-            <Image source={require("../assets/pencil.png")} style={styles.pencil} />
-          </TouchableOpacity>
+          <TouchableOpacity style={styles.premiumMember}>
+
+            <Image
+              source={require("../assets/Tiffany.png")}
+              style={styles.profilePic}
+            />
+
+            <View style={styles.profileText}>
+              <Text style={styles.header}>Tiffany</Text>
+              <Text style={styles.header2}>
+                Tiffanyjearsey@gmail.com
+              </Text>
+            </View>
+
+            <TouchableOpacity style={{ marginLeft: 'auto', marginRight: 10 }}>
+              <Image
+                source={require("../assets/pencil.png")}
+                style={styles.pencil}
+              />
+            </TouchableOpacity>
+
           </TouchableOpacity>
         </View>
 
+        /**
+         * PREMIUM ÜYELİK KARTI
+         * Turuncu arka plan + dekoratif circle efektleri
+         */
         <View style={styles.premium}>
-         <TouchableOpacity style={styles.premiumMember}>
-          <View style={styles.rozetWrapper}>
-            <Ionicons name="ribbon-outline" size={35} color="white" />
-          </View>
-          <View style={styles.premiumText}>
-            <Text style={styles.headerPremium}>Premium Member</Text>
-            <Text style={styles.header2Premium}>New movies are coming for you,</Text>
-            <Text style={styles.header2Premium}>Download Now!</Text>
-          </View>
-          <View style={styles.circleEffect2}></View>
-          <View style={styles.circleEffect}></View>
+          <TouchableOpacity style={styles.premiumMember}>
+
+            <View style={styles.rozetWrapper}>
+              <Ionicons name="ribbon-outline" size={35} color="white" />
+            </View>
+
+            <View style={styles.premiumText}>
+              <Text style={styles.headerPremium}>Premium Member</Text>
+              <Text style={styles.header2Premium}>
+                New movies are coming for you,
+              </Text>
+              <Text style={styles.header2Premium}>
+                Download Now!
+              </Text>
+            </View>
+
+            /**
+             * Arka plan dairesel efektler
+             */
+            <View style={styles.circleEffect2}></View>
+            <View style={styles.circleEffect}></View>
+
           </TouchableOpacity>
         </View>
 
-        
-          <Text style={styles.sectionTitle}>Account</Text>
+        /**
+         * ACCOUNT SECTION
+         */
+        <Text style={styles.sectionTitle}>Account</Text>
+
+        /**
+         * Account Menü Item
+         */
         <TouchableOpacity style={styles.accountItem}>
-          
           <View style={styles.itemContent}>
             <View style={styles.iconBack}>
               <Ionicons name="person" size={30} color={'aqua'} />
@@ -85,6 +160,9 @@ export default function ProfileScreen() {
           <Ionicons name="chevron-forward-outline" size={28} color={'aqua'} />
         </TouchableOpacity>
 
+        /**
+         * GENERAL SECTION
+         */
         <Text style={styles.sectionTitle}>General</Text>
 
         <TouchableOpacity style={styles.accountItem}>
@@ -116,7 +194,8 @@ export default function ProfileScreen() {
           </View>
           <Ionicons name="chevron-forward-outline" size={28} color={'aqua'} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.accountItem}> 
+
+        <TouchableOpacity style={styles.accountItem}>
           <View style={styles.itemContent}>
             <View style={styles.iconBack}>
               <Ionicons name="trash-outline" size={30} color={'gray'} />
@@ -126,36 +205,41 @@ export default function ProfileScreen() {
           <Ionicons name="chevron-forward-outline" size={28} color={'aqua'} />
         </TouchableOpacity>
 
+        /**
+         * MORE SECTION
+         */
         <Text style={styles.sectionTitle}>More</Text>
+
         <TouchableOpacity style={styles.accountItem}>
-                  <View style={styles.itemContent}>
-                    <View style={styles.iconBack}>
-                      <Ionicons name="shield-outline" size={30} color={'gray'} />
-                    </View>
-                    <Text style={styles.itemText}>Legal and Policies</Text>
-                  </View>
-                  <Ionicons name="chevron-forward-outline" size={30} color={'aqua'} />
-                </TouchableOpacity>
+          <View style={styles.itemContent}>
+            <View style={styles.iconBack}>
+              <Ionicons name="shield-outline" size={30} color={'gray'} />
+            </View>
+            <Text style={styles.itemText}>Legal and Policies</Text>
+          </View>
+          <Ionicons name="chevron-forward-outline" size={30} color={'aqua'} />
+        </TouchableOpacity>
 
-                <TouchableOpacity style={styles.accountItem}>
-                  <View style={styles.itemContent}>
-                    <View style={styles.iconBack}>
-                      <Ionicons name="help-circle-outline" size={30} color={'gray'} />
-                    </View>
-                    <Text style={styles.itemText}>Help & Feedback</Text>
-                  </View>
-                  <Ionicons name="chevron-forward-outline" size={30} color={'aqua'} />
-                </TouchableOpacity>
+        <TouchableOpacity style={styles.accountItem}>
+          <View style={styles.itemContent}>
+            <View style={styles.iconBack}>
+              <Ionicons name="help-circle-outline" size={30} color={'gray'} />
+            </View>
+            <Text style={styles.itemText}>Help & Feedback</Text>
+          </View>
+          <Ionicons name="chevron-forward-outline" size={30} color={'aqua'} />
+        </TouchableOpacity>
 
-                <TouchableOpacity style={styles.accountItem}>
-                  <View style={styles.itemContent}>
-                    <View style={styles.iconBack}>
-                      <Ionicons name="information-circle-outline" size={30} color={'gray'} />
-                    </View>
-                    <Text style={styles.itemText}>About Us</Text>
-                  </View>
-                  <Ionicons name="chevron-forward-outline" size={30} color={'aqua'} />
-                </TouchableOpacity>
+        <TouchableOpacity style={styles.accountItem}>
+          <View style={styles.itemContent}>
+            <View style={styles.iconBack}>
+              <Ionicons name="information-circle-outline" size={30} color={'gray'} />
+            </View>
+            <Text style={styles.itemText}>About Us</Text>
+          </View>
+          <Ionicons name="chevron-forward-outline" size={30} color={'aqua'} />
+        </TouchableOpacity>
+
       </ScrollView>
     </SafeAreaView>
   );

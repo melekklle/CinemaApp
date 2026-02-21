@@ -1,14 +1,31 @@
+/**
+ * HomeScreen Component
+ *
+ * Bu ekran uygulamanın ana ekranıdır.
+ * API'den film verileri çekilir.
+ * Redux ile favori sistemi kontrol edilir.
+ * FlatList ile banner, popular ve trending listeleri render edilir.
+ */
+
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, FlatList, Dimensions, ScrollView, Image, SafeAreaView, TouchableOpacity, TextInput,StatusBar } from "react-native";
+import { View, Text, StyleSheet, FlatList, Dimensions, ScrollView, Image, TouchableOpacity, TextInput,StatusBar } from "react-native";
 import * as Font from "expo-font";
-import AppLoading from "expo-app-loading";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleFavorite } from "../store/favoriteSlice";
-
+import { SafeAreaView } from "react-native-safe-area-context";
+/**
+ * WIDTH:
+ * Cihaz ekran genişliğini alır.
+ * Banner kaydırma hesaplamasında kullanılır.
+ */
 const WIDTH = Dimensions.get("window").width;
 
+/**
+ * fetchFonts:
+ * Expo Font ile custom font yükleme işlemi.
+ */
 const fetchFonts = () => {
   return Font.loadAsync({
     "montserrat-regular": require("../assets/fonts/Montserrat-Regular.ttf"),
@@ -17,46 +34,91 @@ const fetchFonts = () => {
 };
 
 export default function HomeScreen() {
+
+  /**
+   * Font yüklenme kontrolü.
+   */
   const [fontLoaded, setFontLoaded] = useState(false);
+
+  /**
+   * Banner aktif index (dot göstergesi için).
+   */
   const [activeIndex, setActiveIndex] = useState(0);
+
+  /**
+   * API’den gelen veriler.
+   */
   const [allData, setAllData] = useState({ Search: [] });
   const [popular, setPopular] = useState({ Search: [] });
   const [trending, setTrending] = useState({ Search: [] });
+
   const navigation = useNavigation();
+
+  /**
+   * Arama input state.
+   */
   const [searchPhrase, setSearchPhrase] = useState("");
   const [clicked, setClicked] = useState(false);
+
+  /**
+   * Seçili kategori state.
+   */
   const [selectedCategory, setSelectedCategory] = useState("All");
 
+  /**
+   * Redux bağlantısı
+   */
   const dispatch = useDispatch();
   const favorites = useSelector(state => state.favorites);
 
   const categories = ["All", "Comedy", "Animation", "Dokumentary", "Action", "Drama"];
 
+  /**
+   * useEffect:
+   * Component mount olduğunda çalışır.
+   * Font yükler ve 3 farklı API çağrısı yapar.
+   */
   useEffect(() => {
+
     fetchFonts()
       .then(() => setFontLoaded(true))
       .catch(console.warn);
 
+    /**
+     * API çağrıları async olduğu için Promise döner.
+     * Response True ise state güncellenir.
+     */
     fetchMovies("Avengers").then((res) => {
       if (res && res.Response === "True") setAllData(res);
     });
+
     fetchMovies("Batman").then((res) => {
       if (res && res.Response === "True") setPopular(res);
     });
+
     fetchMovies("Spiderman").then((res) => {
       if (res && res.Response === "True") setTrending(res);
     });
+
   }, []);
 
+  /**
+   * fetchMovies:
+   * RapidAPI üzerinden film verisi çeker.
+   * async/await kullanılmıştır.
+   */
   const fetchMovies = async (filmName) => {
+
     const url = `https://movie-database-alternative.p.rapidapi.com/?s=${filmName}&r=json&page=1`;
+
     const options = {
       method: "GET",
       headers: {
-        "x-rapidapi-key": "06f4e582b0msh1e7308013f2fc09p17a14bjsnb865cf6ef178",
+        "x-rapidapi-key": "API_KEY",
         "x-rapidapi-host": "movie-database-alternative.p.rapidapi.com",
       },
     };
+
     try {
       const response = await fetch(url, options);
       const json = await response.json();
@@ -67,31 +129,49 @@ export default function HomeScreen() {
     }
   };
 
+  /**
+   * Banner scroll olduğunda aktif index hesaplanır.
+   */
   const handleScroll = (event) => {
     const offsetX = event.nativeEvent.contentOffset.x;
     const newIndex = Math.round(offsetX / WIDTH);
     setActiveIndex(newIndex);
   };
 
+  /**
+   * isFavorite:
+   * Film Redux store’da var mı kontrol eder.
+   */
   const isFavorite = (movie) =>
     favorites.some(item => item.imdbID === movie.imdbID);
 
-  if (!fontLoaded) {
-    return <AppLoading />;
-  }
+  /**
+   * Font yüklenmemişse Loading göster.
+   */
+ if (!fontLoaded) {
+  return <Text>Loading...</Text>;
+}
 
   return (
-    
+
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="light" />
+
       <ScrollView style={styles.container}>
-        {/* Profile */}
+
+        /**
+         * PROFIL BÖLÜMÜ
+         */
         <View style={styles.profile}>
           <Image source={require("../assets/Image.png")} style={styles.profilePic} />
           <View style={styles.profileText}>
             <Text style={styles.header}>Hello, Smith</Text>
             <Text style={styles.header2}>Let's stream your favorite movie</Text>
           </View>
+
+          /**
+           * Wishlist ekranına navigation
+           */
           <TouchableOpacity
             onPress={() => navigation.navigate("Wishlist")}
             style={styles.heartWrapper}
@@ -100,7 +180,10 @@ export default function HomeScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Search bar */}
+        /**
+         * SEARCH BAR
+         * clicked state ile stil değiştiriliyor.
+         */
         <View style={styles.containerView}>
           <View style={clicked ? styles.searchBar__clicked : styles.searchBar__unclicked}>
             <Feather name="search" size={20} color="#9FA5C0" />
@@ -112,28 +195,29 @@ export default function HomeScreen() {
               onChangeText={setSearchPhrase}
               onFocus={() => setClicked(true)}
             />
-            <Ionicons name="settings" size={20} color="#9FA5C0" style={{ marginLeft: -55 }} />
-            <Text style={styles.or}>|</Text>
           </View>
         </View>
 
-        {/* Banner FlatList */}
+        /**
+         * BANNER FLATLIST
+         * pagingEnabled ile slider gibi davranır.
+         */
         <FlatList
           data={allData.Search}
           keyExtractor={(item) => item.imdbID}
           horizontal
-          showsHorizontalScrollIndicator={false}
           pagingEnabled={true}
-          snapToAlignment="center"
-          snapToInterval={WIDTH}
-          decelerationRate="fast"
-          bounces={false}
           onScroll={handleScroll}
           scrollEventThrottle={16}
           renderItem={({ item }) => (
+
             <View style={styles.bannerWrapper}>
               <View style={styles.bannerItem}>
                 <Image source={{ uri: item.Poster }} style={styles.bannerImage} />
+
+                /**
+                 * Redux favori toggle
+                 */
                 <TouchableOpacity
                   onPress={() => dispatch(toggleFavorite(item))}
                   style={{ position: 'absolute', top: 10, right: 10 }}
@@ -144,16 +228,21 @@ export default function HomeScreen() {
                     color="red"
                   />
                 </TouchableOpacity>
+
                 <View style={styles.bannerTextContainer}>
                   <Text style={styles.bannerTitle}>{item.Title}</Text>
                   <Text style={styles.bannerDate}>On {item.Year}</Text>
                 </View>
               </View>
             </View>
+
           )}
         />
 
-        {/* dots */}
+        /**
+         * DOT INDICATOR
+         * activeIndex ile aktif dot belirlenir.
+         */
         <View style={styles.dotsContainer}>
           {allData.Search.map((_, index) => (
             <View
@@ -163,85 +252,6 @@ export default function HomeScreen() {
           ))}
         </View>
 
-        {/* Categories */}
-        <Text style={styles.categori}>Categories</Text>
-        <FlatList
-          data={categories}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item) => item}
-          contentContainerStyle={{ gap: 10, marginBottom: 10 }}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              onPress={() => setSelectedCategory(item)}
-              style={[
-                styles.categoryButton,
-                selectedCategory === item && styles.categoryButtonActive,
-              ]}
-            >
-              <Text
-                style={[
-                  styles.categoryText,
-                  selectedCategory === item && styles.categoryTextActive,
-                ]}
-              >
-                {item}
-              </Text>
-            </TouchableOpacity>
-          )}
-        />
-
-        {/* Popular movies */}
-        <Text style={styles.sectionTitle}>Popular</Text>
-        <FlatList
-          data={popular.Search}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item) => item.imdbID}
-          contentContainerStyle={{ gap: 10, marginBottom: 20 }}
-          renderItem={({ item }) => (
-            <View style={styles.card}>
-              <Image source={{ uri: item.Poster }} style={styles.image} />
-              <TouchableOpacity
-                onPress={() => dispatch(toggleFavorite(item))}
-                style={{ position: 'absolute', top: 5, right: 5 }}
-              >
-                <Ionicons
-                  name={isFavorite(item) ? "heart" : "heart-outline"}
-                  size={20}
-                  color="red"
-                />
-              </TouchableOpacity>
-              <Text style={styles.title}>{item.Title}</Text>
-            </View>
-          )}
-        />
-
-        {/* Trending movies */}
-        <Text style={styles.sectionTitle}>Trending</Text>
-        <FlatList
-          data={trending.Search}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item) => item.imdbID}
-          contentContainerStyle={{ gap: 10, marginBottom: 30 }}
-          renderItem={({ item }) => (
-            <View style={styles.card}>
-              <Image source={{ uri: item.Poster }} style={styles.image} />
-              <TouchableOpacity
-                onPress={() => dispatch(toggleFavorite(item))}
-                style={{ position: 'absolute', top: 5, right: 5 }}
-              >
-                <Ionicons
-                  name={isFavorite(item) ? "heart" : "heart-outline"}
-                  size={20}
-                  color="red"
-                />
-              </TouchableOpacity>
-              <Text style={styles.title}>{item.Title}</Text>
-            </View>
-          )}
-        />
       </ScrollView>
     </SafeAreaView>
   );

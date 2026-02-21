@@ -1,3 +1,11 @@
+/**
+ * Favorite Component
+ *
+ * Bu ekran favori bir filmin detaylarını gösterir.
+ * Route params üzerinden gelen movie objesi kullanılır.
+ * Navigation, BlurView, LinearGradient ve FlatList içerir.
+ */
+
 import { useState,useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, FlatList, Image } from "react-native";
 import { Feather, Ionicons } from "@expo/vector-icons";
@@ -6,11 +14,35 @@ import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
 
 export default function Favorite(props) {
+
+  /**
+   * useNavigation -> hook sayesinde navigation objesine erişiyoruz.
+   */
   const navigation = useNavigation();
+
+  /**
+   * Route params ile önceki ekrandan gönderilen movie verisini alıyoruz.
+   * Optional chaining (?.) hata oluşmasını engeller.
+   */
   const movie = props?.route?.params?.movie;
+
+  /**
+   * showShareModal -> paylaşım modalını açıp kapatmak için boolean state.
+   */
   const [showShareModal, setShowShareModal] = useState(false);
+
+  /**
+   * useEffect:
+   * Component mount olduğunda çalışır.
+   * Cleanup function ile unmount olduğunda tabBar stilini geri yükler.
+   */
   useEffect(() => {
     navigation.getParent()?.setOptions({});
+
+    /**
+     * return kısmı cleanup function’dır.
+     * Component ekrandan çıkınca çalışır.
+     */
     return () => {
       navigation.getParent()?.setOptions({
         tabBarStyle: {
@@ -24,6 +56,10 @@ export default function Favorite(props) {
     };
   }, [navigation]);
 
+  /**
+   * castData -> Local sabit veri.
+   * FlatList içinde render edilir.
+   */
   const castData = [
     { id: '1', name: 'Dario Russo', role: 'Director', image: require("../assets/Image.png") },
     { id: '2', name: 'Dario Russo', role: 'Director and Writer', image: require("../assets/Image.png") },
@@ -34,7 +70,14 @@ export default function Favorite(props) {
 
   return (
     <View style={styles.container}>
+
+      {/* ScrollView -> Sayfa scroll edilebilir */}
       <ScrollView>
+
+        {/**
+         * BlurView -> Arka planı bulanık yapar.
+         * Poster resmi arka plan olarak kullanılmıştır.
+         */}
         <BlurView intensity={100} tint="dark" style={styles.backgroundPoster}>
           <Image
             source={{ uri: movie?.Poster }}
@@ -42,17 +85,27 @@ export default function Favorite(props) {
             resizeMode="cover"
           />
         </BlurView>
+
+        {/**
+         * LinearGradient -> Yukarıdan aşağıya kararma efekti.
+         * UI tasarım amaçlı kullanılmıştır.
+         */}
         <LinearGradient colors={['transparent', 'rgba(31,29,43,0.8)', 'rgba(31,29,43,1)']} style={styles.backgroundLinear}>
+
+          {/* Header */}
           <View style={styles.headerRow}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <Ionicons name="arrow-back" size={24} color={"white"} />
             </TouchableOpacity>
+
             <Text style={styles.title}>Favorite</Text>
+
             <TouchableOpacity style={styles.heartWrapper}>
               <Image source={require("../assets/heart.png")} style={styles.heart} />
             </TouchableOpacity>
           </View>
 
+          {/* Poster */}
           <View style={styles.posterContainer}>
             <Image
               source={{ uri: movie?.Poster }}
@@ -61,6 +114,7 @@ export default function Favorite(props) {
             />
           </View>
 
+          {/* Film Bilgi Satırı */}
           <View style={styles.infoRow}>
             <View style={styles.infoItem}>
               <Ionicons name="calendar" size={16} color="#9FA5C0" />
@@ -76,36 +130,52 @@ export default function Favorite(props) {
             </View>
           </View>
 
+          {/* Rating Badge */}
           <View style={styles.ratingContainer}>
             <View style={styles.ratingBadge}>
               <Text style={styles.ratingText}>★ 4.5</Text>
             </View>
           </View>
 
+          {/* Butonlar */}
           <View style={styles.buttonsRow}>
+
+            {/* Play Button */}
             <TouchableOpacity style={styles.playButton}>
               <Ionicons name="play" size={20} color={"white"} />
               <Text style={styles.playText}>Play</Text>
             </TouchableOpacity>
+
+            {/* Download Icon */}
             <TouchableOpacity style={styles.iconButton}>
               <Feather name="download" size={20} color={"white"} />
             </TouchableOpacity>
+
+            {/**
+             * Share butonu -> state true yaparak modal açar.
+             */}
             <TouchableOpacity style={styles.iconButton} onPress={() => setShowShareModal(true)}>
               <Feather name="share" size={20} color="#12CDD9" />
             </TouchableOpacity>
           </View>
         </LinearGradient>
 
+        {/* Story Section */}
         <View style={styles.storySection}>
           <Text style={styles.storyTitle}>Story Line</Text>
           <Text style={styles.storyText}>
-            For the first time in the cinematic history of Spider-Man, our friendly neighborhood hero's identity is revealed,
-            bringing his Super Hero responsibilities into conflict with his normal life and putting those he cares about most at risk.
+            Film açıklama metni burada gösterilir.
           </Text>
         </View>
 
+        {/* Cast Section */}
         <View style={styles.storySection}>
           <Text style={styles.storyTitle}>Cast And Crew</Text>
+
+          {/**
+           * FlatList -> Performanslı liste render eder.
+           * keyExtractor -> Her item için unique id döndürür.
+           */}
           <FlatList
             data={castData}
             keyExtractor={(item) => item.id}
@@ -122,35 +192,33 @@ export default function Favorite(props) {
               </View>
             )}
           />
-          <View style={styles.epidose}>
-            <Text style={styles.epidoseTitle}>Episode</Text>
-          </View>
         </View>
       </ScrollView>
 
+      {/**
+       * Conditional Rendering:
+       * Eğer showShareModal true ise modal gösterilir.
+       */}
       {showShareModal && (
         <View style={styles.absoluteOverlay}>
           <BlurView intensity={80} tint="dark" style={styles.fullScreenBlur}>
             <View style={styles.shareBox}>
+
+              {/* Modal Kapatma */}
               <TouchableOpacity style={styles.closeButton} onPress={() => setShowShareModal(false)}>
                 <Ionicons name="close" size={30} color={'white'} />
               </TouchableOpacity>
+
               <Text style={styles.shareTitle}>Share to</Text>
-              
+
+              {/* Sosyal Medya İkonları */}
               <View style={styles.shareIcons}>
-                <TouchableOpacity>
-                <Ionicons name="logo-facebook" size={35} color={'#4267B2'} style={{ margin: 10 }} />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                <Ionicons name="logo-instagram" size={35} color={'#E1306C'} style={{ margin: 10 }} />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                <Ionicons name="logo-pinterest" size={35} color={'red'} style={{ margin: 10 }} />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                <Ionicons name="paper-plane-outline" size={35} color={'#00C2FF'} style={{ margin: 10 }} />
-                </TouchableOpacity>
+                <Ionicons name="logo-facebook" size={35} color={'#4267B2'} />
+                <Ionicons name="logo-instagram" size={35} color={'#E1306C'} />
+                <Ionicons name="logo-pinterest" size={35} color={'red'} />
+                <Ionicons name="paper-plane-outline" size={35} color={'#00C2FF'} />
               </View>
+
             </View>
           </BlurView>
         </View>

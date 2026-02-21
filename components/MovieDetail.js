@@ -1,3 +1,13 @@
+/**
+ * Wishlist (Movie Detail) Screen
+ *
+ * Bu ekran:
+ * - HomeScreen'den gönderilen movie parametresini alır
+ * - Film detaylarını gösterir
+ * - Blur + LinearGradient ile görsel efekt uygular
+ * - Share modal açıp kapatır
+ */
+
 import { useState, useEffect} from "react";
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, FlatList, Image } from "react-native";
 import { Feather, Ionicons } from "@expo/vector-icons";
@@ -6,12 +16,32 @@ import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
 
 export default function Wishlist(props) {
+
+  /**
+   * Navigation hook
+   */
   const navigation = useNavigation();
+
+  /**
+   * Route params üzerinden gelen film verisi
+   * HomeScreen -> navigation.navigate("Wishlist", { movie: item })
+   */
   const movie = props?.route?.params?.movie;
+
+  /**
+   * Share modal visibility state
+   */
   const [showShareModal, setShowShareModal] = useState(false);
 
+  /**
+   * useEffect:
+   * Bu ekran açıldığında tab bar stilini değiştirir.
+   * Unmount olduğunda eski haline getirir.
+   */
   useEffect(() => {
+
     navigation.getParent()?.setOptions({});
+
     return () => {
       navigation.getParent()?.setOptions({
         tabBarStyle: {
@@ -23,8 +53,14 @@ export default function Wishlist(props) {
         },
       });
     };
+
   }, [navigation]);
 
+  /**
+   * Cast data:
+   * Örnek sabit veri.
+   * Normalde API’den gelmesi gerekir.
+   */
   const castData = [
     { id: '1', name: 'Dario Russo', role: 'Director', image: require("../assets/Image.png") },
     { id: '2', name: 'Dario Russo', role: 'Director and Writer', image: require("../assets/Image.png") },
@@ -35,7 +71,13 @@ export default function Wishlist(props) {
 
   return (
     <View style={styles.container}>
+
       <ScrollView>
+
+        /**
+         * ARKA PLAN POSTER
+         * Blur efekti uygulanmış
+         */
         <BlurView intensity={100} tint="dark" style={styles.backgroundPoster}>
           <Image
             source={{ uri: movie?.Poster }}
@@ -43,17 +85,35 @@ export default function Wishlist(props) {
             resizeMode="cover"
           />
         </BlurView>
-        <LinearGradient colors={['transparent', 'rgba(31,29,43,0.8)', 'rgba(31,29,43,1)']} style={styles.backgroundLinear}>
+
+        /**
+         * LinearGradient:
+         * Poster üstüne koyu geçiş efekti verir.
+         */
+        <LinearGradient
+          colors={['transparent', 'rgba(31,29,43,0.8)', 'rgba(31,29,43,1)']}
+          style={styles.backgroundLinear}
+        >
+
+          /**
+           * HEADER ROW
+           * Geri butonu + Başlık + Favori
+           */
           <View style={styles.headerRow}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <Ionicons name="arrow-back" size={24} color={"white"} />
             </TouchableOpacity>
+
             <Text style={styles.title}>Today Movie</Text>
+
             <TouchableOpacity style={styles.heartWrapper}>
               <Image source={require("../assets/heart.png")} style={styles.heart} />
             </TouchableOpacity>
           </View>
 
+          /**
+           * Film Poster Görseli
+           */
           <View style={styles.posterContainer}>
             <Image
               source={{ uri: movie?.Poster }}
@@ -62,57 +122,83 @@ export default function Wishlist(props) {
             />
           </View>
 
+          /**
+           * Film Bilgi Satırı
+           * Yıl, Süre, Tür
+           */
           <View style={styles.infoRow}>
             <View style={styles.infoItem}>
               <Ionicons name="calendar" size={16} color="#9FA5C0" />
               <Text style={styles.infoText}>{movie?.Year}</Text>
             </View>
+
             <View style={styles.infoItem}>
               <Ionicons name="time" size={16} color="#9FA5C0" />
               <Text style={styles.infoText}>148 Minutes</Text>
             </View>
+
             <View style={styles.infoItem}>
               <Ionicons name="film" size={16} color="#9FA5C0" />
               <Text style={styles.infoText}>Action</Text>
             </View>
           </View>
 
+          /**
+           * Rating Badge
+           */
           <View style={styles.ratingContainer}>
             <View style={styles.ratingBadge}>
               <Text style={styles.ratingText}>★ 4.5</Text>
             </View>
           </View>
 
+          /**
+           * Action Buttons:
+           * Play - Download - Share
+           */
           <View style={styles.buttonsRow}>
+
             <TouchableOpacity style={styles.playButton}>
               <Ionicons name="play" size={20} color={"white"} />
               <Text style={styles.playText}>Play</Text>
             </TouchableOpacity>
+
             <TouchableOpacity style={styles.iconButton}>
               <Feather name="download" size={20} color={"white"} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.iconButton} onPress={() => setShowShareModal(true)}>
+
+            <TouchableOpacity
+              style={styles.iconButton}
+              onPress={() => setShowShareModal(true)}
+            >
               <Feather name="share" size={20} color="#12CDD9" />
             </TouchableOpacity>
+
           </View>
         </LinearGradient>
 
+        /**
+         * STORY LINE SECTION
+         */
         <View style={styles.storySection}>
           <Text style={styles.storyTitle}>Story Line</Text>
           <Text style={styles.storyText}>
-            For the first time in the cinematic history of Spider-Man, our friendly neighborhood hero's identity is revealed,
-            bringing his Super Hero responsibilities into conflict with his normal life and putting those he cares about most at risk.
+            Film açıklaması burada gösterilir.
           </Text>
         </View>
 
+        /**
+         * CAST & CREW SECTION
+         * Horizontal FlatList
+         */
         <View style={styles.storySection}>
           <Text style={styles.storyTitle}>Cast And Crew</Text>
+
           <FlatList
             data={castData}
             keyExtractor={(item) => item.id}
             horizontal
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingVertical: 10 }}
             renderItem={({ item }) => (
               <View style={styles.castItem}>
                 <Image source={item.image} style={styles.castImage} />
@@ -123,38 +209,41 @@ export default function Wishlist(props) {
               </View>
             )}
           />
-          <View style={styles.epidose}>
-            <Text style={styles.epidoseTitle}>Episode</Text>
-          </View>
         </View>
+
       </ScrollView>
 
+      /**
+       * SHARE MODAL
+       * showShareModal true ise render edilir.
+       */
       {showShareModal && (
         <View style={styles.absoluteOverlay}>
           <BlurView intensity={80} tint="dark" style={styles.fullScreenBlur}>
+
             <View style={styles.shareBox}>
-              <TouchableOpacity style={styles.closeButton} onPress={() => setShowShareModal(false)}>
+
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={() => setShowShareModal(false)}
+              >
                 <Ionicons name="close" size={30} color={'white'} />
               </TouchableOpacity>
+
               <Text style={styles.shareTitle}>Share to</Text>
+
               <View style={styles.shareIcons}>
-               <TouchableOpacity>
-                <Ionicons name="logo-facebook" size={35} color={'#4267B2'} style={{ margin: 10 }} />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                <Ionicons name="logo-instagram" size={35} color={'#E1306C'} style={{ margin: 10 }} />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                <Ionicons name="logo-pinterest" size={35} color={'red'} style={{ margin: 10 }} />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                <Ionicons name="paper-plane-outline" size={35} color={'#00C2FF'} style={{ margin: 10 }} />
-                </TouchableOpacity>
+                <Ionicons name="logo-facebook" size={35} color={'#4267B2'} />
+                <Ionicons name="logo-instagram" size={35} color={'#E1306C'} />
+                <Ionicons name="logo-pinterest" size={35} color={'red'} />
+                <Ionicons name="paper-plane-outline" size={35} color={'#00C2FF'} />
               </View>
+
             </View>
           </BlurView>
         </View>
       )}
+
     </View>
   );
 }

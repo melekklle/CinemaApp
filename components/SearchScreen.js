@@ -1,42 +1,97 @@
+/**
+ * SearchScreen
+ *
+ * Bu ekran:
+ * - Kullanıcıdan arama inputu alır
+ * - Kategori seçimi sağlar
+ * - "Today" filmi gösterir
+ * - Önerilen filmleri HomeSliderWidget ile listeler
+ * - API’den veri çeker
+ */
+
 import React, { useEffect, useState } from "react";
-import {View,Text,StyleSheet,FlatList,ScrollView,Image,SafeAreaView,TouchableOpacity,TextInput,Dimensions} from "react-native";
+import {View,Text,StyleSheet,ScrollView,Image,TouchableOpacity,TextInput,Dimensions} from "react-native";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import { useNavigation } from "@react-navigation/native";
 import HomeSliderWidget from "../widget/HomeSliderWidget";
+import { SafeAreaView } from "react-native-safe-area-context";
+/**
+ * Ekran genişliği (şu an kullanılmıyor ama slider için hazır)
+ */
 const WIDTH = Dimensions.get("window").width;
 
 export default function SearchScreen() {
+
+  /**
+   * Arama input state
+   */
   const [searchText, setSearchText] = useState("");
+
+  /**
+   * Today filmi state
+   */
   const [todayMovie, setTodayMovie] = useState(null);
+
+  /**
+   * Önerilen filmler state
+   */
   const [recommendations, setRecommendations] = useState([]);
+
+  /**
+   * Seçili kategori state
+   */
   const [selectedCategory, setSelectedCategory] = useState("All");
 
+  /**
+   * Kategori listesi
+   */
   const categories = ["All", "Comedy", "Animation", "Dokumentary"];
+
   const navigation = useNavigation();
 
+  /**
+   * useEffect:
+   * Component mount olduğunda 2 API çağrısı yapar.
+   */
   useEffect(() => {
+
+    /**
+     * Today filmi için veri çekilir
+     */
     fetchMovie("spiderman").then((res) => {
       if (res && res.Response === "True") {
         setTodayMovie(res.Search[0]);
       }
     });
+
+    /**
+     * Recommendation için veri çekilir
+     */
     fetchMovie("life").then((res) => {
       if (res && res.Response === "True") {
         setRecommendations(res.Search.slice(0, 5));
       }
     });
+
   }, []);
 
+  /**
+   * fetchMovie:
+   * RapidAPI üzerinden film verisi çeker.
+   */
   const fetchMovie = async (filmName) => {
+
     const url = `https://movie-database-alternative.p.rapidapi.com/?s=${filmName}&r=json&page=1`;
+
     const options = {
       method: "GET",
       headers: {
-        "x-rapidapi-key": "06f4e582b0msh1e7308013f2fc09p17a14bjsnb865cf6ef178",
+        "x-rapidapi-key": "API_KEY",
         "x-rapidapi-host": "movie-database-alternative.p.rapidapi.com",
       },
     };
+
     try {
       const response = await fetch(url, options);
       const json = await response.json();
@@ -51,7 +106,9 @@ export default function SearchScreen() {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.container}>
 
-        {/* search */}
+        /**
+         * SEARCH BAR
+         */
         <View style={styles.searchBar}>
           <Feather name="search" size={18} color="#92929D" />
           <TextInput
@@ -63,7 +120,9 @@ export default function SearchScreen() {
           />
         </View>
 
-        {/*katagori */}
+        /**
+         * CATEGORY SCROLL
+         */
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -90,8 +149,11 @@ export default function SearchScreen() {
           ))}
         </ScrollView>
 
-        {/* today Movie */}
+        /**
+         * TODAY MOVIE SECTION
+         */
         <Text style={styles.sectionTitle}>Today</Text>
+
         {todayMovie && (
           <TouchableOpacity
             style={styles.todayCard}
@@ -103,7 +165,12 @@ export default function SearchScreen() {
               source={{ uri: todayMovie.Poster }}
               style={styles.todayImage}
             />
+
+            /**
+             * Film Bilgileri
+             */
             <View style={styles.todayInfo}>
+
               <Text style={styles.todayTitle}>
                 {todayMovie.Title.length > 20
                   ? todayMovie.Title.slice(0, 20) + ".."
@@ -111,48 +178,43 @@ export default function SearchScreen() {
               </Text>
 
               <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Ionicons
-                  name="calendar"
-                  size={16}
-                  color="#9FA5C0"
-                  style={{ marginRight: 4 }}
-                />
+                <Ionicons name="calendar" size={16} color="#9FA5C0" />
                 <Text style={styles.movieDetails}>2021</Text>
               </View>
 
               <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Ionicons
-                  name="time"
-                  size={16}
-                  color="#9FA5C0"
-                  style={{ marginRight: 4 }}
-                />
+                <Ionicons name="time" size={16} color="#9FA5C0" />
                 <Text style={styles.movieDetails}>148 Minutes</Text>
               </View>
 
               <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Ionicons
-                  name="film"
-                  size={16}
-                  color="#9FA5C0"
-                  style={{ marginRight: 4 }}
-                />
+                <Ionicons name="film" size={16} color="#9FA5C0" />
                 <Text style={styles.movieDetails}>Action |</Text>
                 <Text style={styles.movieDetailsM}> Movie</Text>
               </View>
+
             </View>
 
+            /**
+             * Premium Badge
+             */
             <View style={styles.premiumBadge}>
               <Text style={styles.premiumText}>Premium</Text>
             </View>
 
+            /**
+             * Rating Badge (Blur efekti)
+             */
             <BlurView intensity={40} tint="light" style={styles.ratingBadge}>
               <Text style={styles.ratingText}>★ 4.5</Text>
             </BlurView>
+
           </TouchableOpacity>
         )}
 
-        {/*recommend */}
+        /**
+         * RECOMMEND SECTION
+         */
         <View style={styles.recommendRow}>
           <Text style={styles.sectionTitle}>Recommend For You</Text>
           <TouchableOpacity>
@@ -160,12 +222,20 @@ export default function SearchScreen() {
           </TouchableOpacity>
         </View>
 
-       <HomeSliderWidget data={recommendations} title="Recommend For You" description={true}/>
+        /**
+         * Custom Widget
+         * HomeSliderWidget reusable component
+         */
+        <HomeSliderWidget
+          data={recommendations}
+          title="Recommend For You"
+          description={true}
+        />
+
       </ScrollView>
     </SafeAreaView>
   );
 }
-
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
