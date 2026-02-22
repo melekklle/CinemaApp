@@ -14,47 +14,30 @@ import {View,Text,ScrollView,StyleSheet,Image,TouchableOpacity,} from "react-nat
 import { SafeAreaView } from "react-native-safe-area-context";
 export default function ProfileScreen() {
 
-  /**
-   * API'den gelen veri state
-   * (Şu an UI içinde kullanılmıyor)
-   */
-  const [data, setData] = useState([]);
-
-  /**
-   * Loading state
-   */
-  const [loading, setLoading] = useState(true);
-
-  /**
-   * useEffect:
-   * Component mount olduğunda API çağrısı yapar.
-   * Avengers Endgame verisini çeker.
-   */
   useEffect(() => {
 
-    const fetchData = async () => {
+    const fetchData = async () => {//api den veri çeken bir fonksiyon oluşturuyor
+        //async  internetten veri bekleyecek demek
       try {
 
-        /**
-         * API çağrısı (headers eksik - RapidAPI key yok)
-         */
-        let response = await fetch(
+        let response = await fetch( //api ye  istek gönderir film verisini internetten alır
+        //await  veri gelene kadar bekler
           "https://movie-database-alternative.p.rapidapi.com/?s=Avengers%20Endgame&r=json&page=1"
         );
 
-        let json = await response.json();
-        setData(json);
+        let json = await response.json(); //gelen veriyi JavaScript objesine çevirir
+        setData(json); //gelen film verisini data state'ine kaydeder ekran güncellenir.
 
-      } catch (error) {
+      } catch (error) { // eğer api hata verirse consola yazdırır
         console.error(error);
-      } finally {
-        setLoading(false);
+      } finally {// hat olsa da olmasa da her zaman çalışır 
+        setLoading(false); // veri yükleme işlemi bitti bilgisi verir
       }
     };
 
-    fetchData();
+    fetchData();// fonksiyonu çalıştırır
 
-  }, []);
+  }, []); //bu kodun sadece ekran ilk açıldığında 1 kere çalışmasını sağlar (tekrar çalışmaz) dependency array.
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -75,7 +58,7 @@ export default function ProfileScreen() {
 
         {/**
          * PROFIL KARTI
-         * Kullanıcı adı + mail + düzenleme ikonu
+         * kullanıcı adı  mail  düzenleme ikonu
          */}
         <View style={styles.profile}>
           <TouchableOpacity style={styles.premiumMember}>
@@ -104,12 +87,12 @@ export default function ProfileScreen() {
 
         {/**
          * PREMIUM ÜYELİK KARTI
-         * Turuncu arka plan + dekoratif circle efektleri
+         * Turuncu arka plan  dekoratif circle efektleri
          */}
-        <View style={styles.premium}>
-          <TouchableOpacity style={styles.premiumMember}>
+        <View style={styles.premium}> {/**çerçeve kısmı  */}
+          <TouchableOpacity style={styles.premiumMember}> {/**tıklanabilir rozet */}
 
-            <View style={styles.rozetWrapper}>
+            <View style={styles.rozetWrapper}> {/**rozet kısmı  */}
               <Ionicons name="ribbon-outline" size={35} color="white" />
             </View>
 
@@ -131,10 +114,6 @@ export default function ProfileScreen() {
 
           </TouchableOpacity>
         </View>
-
-        {/**
-         * ACCOUNT SECTION
-         */}
         <Text style={styles.sectionTitle}>Account</Text>
        {/**
          * Account Menü Item
@@ -159,9 +138,6 @@ export default function ProfileScreen() {
           <Ionicons name="chevron-forward-outline" size={28} color={'aqua'} />
         </TouchableOpacity>
 
-        {/**
-         * GENERAL SECTION
-         */}
         <Text style={styles.sectionTitle}>General</Text>
 
         <TouchableOpacity style={styles.accountItem}>
@@ -204,9 +180,7 @@ export default function ProfileScreen() {
           <Ionicons name="chevron-forward-outline" size={28} color={'aqua'} />
         </TouchableOpacity>
 
-        {/**
-         * MORE SECTION
-         */}
+
         <Text style={styles.sectionTitle}>More</Text>
 
         <TouchableOpacity style={styles.accountItem}>

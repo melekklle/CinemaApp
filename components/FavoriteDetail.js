@@ -16,34 +16,24 @@ import { BlurView } from "expo-blur";
 export default function Favorite(props) {
 
   /**
-   * useNavigation -> hook sayesinde navigation objesine erişiyoruz.
+   * useNavigation hook sayesinde navigation objesine erişiyoruz.
    */
   const navigation = useNavigation();
 
   /**
-   * Route params ile önceki ekrandan gönderilen movie verisini alıyoruz.
-   * Optional chaining (?.) hata oluşmasını engeller.
-   */
+   * Route params ile önceki ekrandan gönderilen movie verisini alıyoruz
+   **/
   const movie = props?.route?.params?.movie;
-
+/**props: sayafaya gelen tüm bilgiler. route: hangi sayfadan ve gönderilen verileri tutar.params: gönderilen verinin olduğu yer */
   /**
-   * showShareModal -> paylaşım modalını açıp kapatmak için boolean state.
+   * showShareModal paylaşım modalını açıp kapatmak için boolean state
    */
   const [showShareModal, setShowShareModal] = useState(false);
 
-  /**
-   * useEffect:
-   * Component mount olduğunda çalışır.
-   * Cleanup function ile unmount olduğunda tabBar stilini geri yükler.
-   */
-  useEffect(() => {
-    navigation.getParent()?.setOptions({});
 
-    /**
-     * return kısmı cleanup function’dır.
-     * Component ekrandan çıkınca çalışır.
-     */
-    return () => {
+  useEffect(() => { /**useEffect ekran açılınca çalışır navigation.getParent() üst ekranı bulur setOptions() ise o ekranın ayarlarını değiştirir */
+    navigation.getParent()?.setOptions({});
+    return () => { /**sayfaya girince tab bar ayarı değişiyor sayfadan çıkınca eski ayar geri yükleniyor */
       navigation.getParent()?.setOptions({
         tabBarStyle: {
           backgroundColor: '#1F1D2B',
@@ -56,11 +46,7 @@ export default function Favorite(props) {
     };
   }, [navigation]);
 
-  /**
-   * castData -> Local sabit veri.
-   * FlatList içinde render edilir.
-   */
-  const castData = [
+  const castData = [ /**castData adında bir liste oluşturur. listeye objeleri ekler  */
     { id: '1', name: 'Dario Russo', role: 'Director', image: require("../assets/Image.png") },
     { id: '2', name: 'Dario Russo', role: 'Director and Writer', image: require("../assets/Image.png") },
     { id: '3', name: 'David Ashby', role: 'Writer', image: require("../assets/Image.png") },
@@ -71,24 +57,23 @@ export default function Favorite(props) {
   return (
     <View style={styles.container}>
 
-      {/* ScrollView -> Sayfa scroll edilebilir */}
+      {/*sayfa scroll edilebilir */}
       <ScrollView>
       
         {/**
-         * BlurView -> Arka planı bulanık yapar.
-         * Poster resmi arka plan olarak kullanılmıştır.
+         * BlurView arka planı bulanık yapar
+         * poster resmi arka plan olarak kullanılmıştır
          */}
         <BlurView intensity={100} tint="dark" style={styles.backgroundPoster}>
           <Image
-            source={{ uri: movie?.Poster }}
+            source={{ uri: movie?.Poster }} /**uri :... resmin internet linki  */
             style={styles.backgroundPoster}
             resizeMode="cover"
           />
         </BlurView>
 
         {/**
-         * LinearGradient -> Yukarıdan aşağıya kararma efekti.
-         * UI tasarım amaçlı kullanılmıştır.
+         * LinearGradient yukarıdan aşağıya kararma efekti*
          */}
         <LinearGradient colors={['transparent', 'rgba(31,29,43,0.8)', 'rgba(31,29,43,1)']} style={styles.backgroundLinear}>
 
@@ -152,7 +137,7 @@ export default function Favorite(props) {
             </TouchableOpacity>
 
             {/**
-             * Share butonu -> state true yaparak modal açar.
+             * share butonu state true yaparak modal açar.
              */}
             <TouchableOpacity style={styles.iconButton} onPress={() => setShowShareModal(true)}>
               <Feather name="share" size={20} color="#12CDD9" />
@@ -173,16 +158,15 @@ export default function Favorite(props) {
           <Text style={styles.storyTitle}>Cast And Crew</Text>
 
           {/**
-           * FlatList -> Performanslı liste render eder.
-           * keyExtractor -> Her item için unique id döndürür.
+           * FlatList  Performanslı liste render eder.
            */}
           <FlatList
-            data={castData}
-            keyExtractor={(item) => item.id}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingVertical: 10 }}
-            renderItem={({ item }) => (
+            data={castData} // castData daki kişileri ekrana basar 
+            keyExtractor={(item) => item.id} // her kişiye özel id 
+            horizontal // liste yan yana kayar  
+            showsHorizontalScrollIndicator={false} // alttaki scroll cizgisini gizler 
+            contentContainerStyle={{ paddingVertical: 10 }} // listenin  altına üstüne bosluk 
+            renderItem={({ item }) => ( // listedeki yüm kişilere bu stilleri ver
               <View style={styles.castItem}>
                 <Image source={item.image} style={styles.castImage} />
                 <View style={styles.castTextContainer}>
@@ -195,17 +179,13 @@ export default function Favorite(props) {
         </View>
       </ScrollView>
 
-      {/**
-       * Conditional Rendering:
-       * Eğer showShareModal true ise modal gösterilir.
-       */}
-      {showShareModal && (
-        <View style={styles.absoluteOverlay}>
-          <BlurView intensity={80} tint="dark" style={styles.fullScreenBlur}>
+      {showShareModal && ( //paylaşım penceresinin (modalın) açılıp kapanmasını kontrol eden değeri değiştirir
+        <View style={styles.absoluteOverlay}> {/**popup arka planı  */}
+          <BlurView intensity={80} tint="dark" style={styles.fullScreenBlur}> {/**arka planı bulanık yapar */}
             <View style={styles.shareBox}>
 
               {/* Modal Kapatma */}
-              <TouchableOpacity style={styles.closeButton} onPress={() => setShowShareModal(false)}>
+              <TouchableOpacity style={styles.closeButton} onPress={() => setShowShareModal(false)}> {/**butona basınca popup kapanır  */}
                 <Ionicons name="close" size={30} color={'white'} />
               </TouchableOpacity>
 
@@ -226,7 +206,7 @@ export default function Favorite(props) {
     </View>
   );
 }
-
+{/**stiller */}
 const styles = StyleSheet.create({
   container: { 
     flex: 1,

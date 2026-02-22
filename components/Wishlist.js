@@ -17,35 +17,19 @@ import { toggleFavorite } from "../store/favoriteSlice";
 import { SafeAreaView } from "react-native-safe-area-context"; 
 
 export default function Wishlist() {
-
-  /**
-   * Navigation hook
-   */
   const navigation = useNavigation();
+//ekranlar arası geçiş 
 
-  /**
-   * Redux bağlantıları
-   */
   const dispatch = useDispatch();
+//redux bağlantısı
+  const favorites = useSelector(state => state.favorites); //redux store'daki favori filmleri alır ve favorites değişkenine atar
 
-  /**
-   * Store'dan favori filmleri alıyoruz
-   */
-  const favorites = useSelector(state => state.favorites);
-
-  /**
-   * useEffect:
-   * Ekran açıldığında TabBar gizlenir.
-   * Unmount olduğunda eski stil geri yüklenir.
-   */
-  useEffect(() => {
-
-    // ✅ TAB BAR GİZLEME EKLENDİ
-    navigation.getParent()?.setOptions({
-      tabBarStyle: { display: "none" }
+  useEffect(() => { //component açıldığında veya kapandığında bazı ayarları yapmamızı sağlar
+    navigation.getParent()?.setOptions({ 
+      tabBarStyle: { display: "none" } //üst tab bar'ı gizler (favoriler ekranında tab bar görünmesin diye)
     });
 
-    return () => {
+    return () => { //tab bar'ı tekrar eski haline getirir
       navigation.getParent()?.setOptions({
         tabBarStyle: {
           borderTopWidth: 0,
@@ -58,39 +42,27 @@ export default function Wishlist() {
 
   }, [navigation]);
 
-  /**
-   * FlatList renderItem fonksiyonu
-   */
-  const renderItem = ({ item }) => (
+  const renderItem = ({ item }) => ( //FlatList içinde her bir favori filmi nasıl göstereceğimizi anlatan fonksiyon
 
     <View style={styles.card}>
-
-      {/**
-       * Film detay ekranına navigation
-       */}
       <TouchableOpacity
         onPress={() =>
-          navigation.navigate("FavoriteDetail", { movie: item })
+          navigation.navigate("FavoriteDetail", { movie: item }) // tıklandığında favoritedetaşl sayfasında gider
         }
       >
 
         <Image
-          source={{ uri: item.Poster }}
+          source={{ uri: item.Poster }} // apiden resim alır
           style={styles.image}
         />
-
-        {/**
-         * Favoriden çıkarma butonu
-         * Redux dispatch çalışır
-         */}
         <TouchableOpacity
-          onPress={() => dispatch(toggleFavorite(item))}
+          onPress={() => dispatch(toggleFavorite(item))} // tıklandığında favorideyse çıkartır değilse favoriye ekler
           style={styles.heartButton}
         >
-          <Ionicons name="heart" size={25} color="red" />
+          <Ionicons name="heart" size={25} color="red" /> {/**kalp ikonu */}
         </TouchableOpacity>
 
-        <Text style={styles.title}>{item.Title}</Text>
+        <Text style={styles.title}>{item.Title}</Text> {/**film başlığı ve çıkış yılı  */}
         <Text style={styles.year}>{item.Year}</Text>
 
       </TouchableOpacity>
@@ -101,17 +73,17 @@ export default function Wishlist() {
     <SafeAreaView style={styles.container}>
 
       {/**
-       * HEADER
+       * header
        */}
       <View style={styles.headerRow}>
         <TouchableOpacity
-          onPress={() =>
+          onPress={() => //kullanıcı geri butonuna tıklarsa eğer önceki ekran varsa geri gider (goBack()) yoksa ana ekrana (Home) gider
             navigation.canGoBack()
               ? navigation.goBack()
               : navigation.getParent()?.navigate("Home")
           }
         >
-          <Ionicons name="arrow-back" size={24} color={"white"} />
+          <Ionicons name="arrow-back" size={24} color={"white"} /> {/**geri butonu */}
         </TouchableOpacity>
 
         <Text style={styles.titleHeader}>Favoriler</Text>
@@ -119,10 +91,10 @@ export default function Wishlist() {
         <View style={{ width: 24 }} />
       </View>
 
-      {favorites.length === 0 ? (
+      {favorites.length === 0 ? ( // favori listesi boş mu dolu mu kontrolü yapar 
 
-        <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>
+        <View style={styles.emptyContainer}> 
+          <Text style={styles.emptyText}> {/**boşsa favori film yok yazdırır */}
             Favori Film Yok.
           </Text>
         </View>
@@ -130,9 +102,9 @@ export default function Wishlist() {
       ) : (
 
         <FlatList
-          data={favorites}
-          keyExtractor={(item) => item.imdbID}
-          renderItem={renderItem}
+          data={favorites} // doluysa favorileri çeker liste halinde gösterir
+          keyExtractor={(item) => item.imdbID} // her birine id verir
+          renderItem={renderItem} // her kartın içeriğini oluşturur
           contentContainerStyle={{
             paddingHorizontal: 15,
             paddingBottom: 30

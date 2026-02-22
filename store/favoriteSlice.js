@@ -1,76 +1,32 @@
-import { createSlice } from '@reduxjs/toolkit';
-
-/**
- * favoritesSlice
- *
- * Bu slice:
- * - Favori filmleri global state'te tutar
- * - toggleFavorite ile ekleme / çıkarma yapar
- * - Aynı filmi 2 kere eklemez
- */
+import { createSlice } from '@reduxjs/toolkit'; // redux toolkit'ten slice oluşturmak için gerekli fonksiyon
 
 const favoritesSlice = createSlice({
-  name: 'favorites',
+  name: 'favorites', // slice ismi redux store'da hangi slice olduğunu belirtir
 
-  /**
-   * initialState:
-   * Favoriler bir array olarak tutulur.
-   * Her item bir film objesidir.
-   */
-  initialState: [],
+  initialState: [], // favoriler başlangıçta boş bir array olarak tutulur her item bir film objesi
 
   reducers: {
+    toggleFavorite: (state, action) => { // favori ekleme/çıkarma işlemi yapan reducer
+      const movie = action.payload; // kullanıcının favorilere eklemek/çıkarmak istediği film
 
-    /**
-     * toggleFavorite
-     *
-     * Eğer film zaten varsa:
-     * → state'ten siler
-     *
-     * Eğer film yoksa:
-     * → state'e ekler
-     *
-     * ÖNEMLİ:
-     * - imdbID üzerinden kontrol yapılır
-     * - Duplicate oluşmaz
-     * - React key hatası vermez
-     */
-    toggleFavorite: (state, action) => {
-
-      const movie = action.payload;
-
-      // imdbID kontrolü (güvenlik için)
-      if (!movie?.imdbID) {
+      if (!movie?.imdbID) { // eğer film objesinde imdbID yoksa state'i değiştirme
         return state;
       }
 
-      // Film zaten var mı?
-      const exists = state.find(
-        item => item.imdbID === movie.imdbID
-      );
+      const exists = state.find(item => item.imdbID === movie.imdbID); // film zaten ekli mi kontrol et
 
-      // Eğer varsa → çıkar
-      if (exists) {
-        return state.filter(
-          item => item.imdbID !== movie.imdbID
-        );
+      if (exists) { // eğer film favorilerde varsa
+        return state.filter(item => item.imdbID !== movie.imdbID); // film favorilerden çıkar
       }
 
-      // Yoksa → ekle
-      return [...state, movie];
+      return [...state, movie]; // yoksa filmi favorilere ekle
     },
 
-    /**
-     * clearFavorites
-     *
-     * Tüm favorileri temizler
-     */
-    clearFavorites: () => {
-      return [];
+    clearFavorites: () => { // tüm favorileri temizleyen reducer
+      return []; // boş array döndür
     },
-
   },
 });
 
-export const { toggleFavorite, clearFavorites } = favoritesSlice.actions;
-export default favoritesSlice.reducer;
+export const { toggleFavorite, clearFavorites } = favoritesSlice.actions; // reducer fonksiyonlarını dışa aktar
+export default favoritesSlice.reducer; // slice reducer'ı store'a eklemek için dışa aktar

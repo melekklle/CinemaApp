@@ -16,11 +16,9 @@ import { BlurView } from "expo-blur";
 import { useNavigation } from "@react-navigation/native";
 import HomeSliderWidget from "../widget/HomeSliderWidget";
 import { SafeAreaView } from "react-native-safe-area-context";
-/**
- * Ekran genişliği (şu an kullanılmıyor ama slider için hazır)
- */
-const WIDTH = Dimensions.get("window").width;
 
+const WIDTH = Dimensions.get("window").width;
+//telefon ekranının genişliğini alıp WIDTH değişkenine kaydeder (ekran boyutuna göre tasarım yapmak için kullanılır)
 export default function SearchScreen() {
 
   /**
@@ -49,7 +47,7 @@ export default function SearchScreen() {
   const categories = ["All", "Comedy", "Animation", "Dokumentary"];
 
   const navigation = useNavigation();
-
+  //ekranlar arası geçiş 
   /**
    * useEffect:
    * Component mount olduğunda 2 API çağrısı yapar.
@@ -59,18 +57,20 @@ export default function SearchScreen() {
     /**
      * Today filmi için veri çekilir
      */
-    fetchMovie("spiderman").then((res) => {
-      if (res && res.Response === "True") {
-        setTodayMovie(res.Search[0]);
+    fetchMovie("spiderman").then((res) => { // spiderman için apiden veri ister 
+      if (res && res.Response === "True") { //Veri gerçekten geldiyse ve başarılıysa çalışır
+    //res var mı kontrol eder
+     //api  başarı mesajı gönderdi mi kontrol eder
+        setTodayMovie(res.Search[0]); //gelen film listesindeki ilk filmi alıp state'e kaydeder 0 ilk film 
       }
     });
 
     /**
      * Recommendation için veri çekilir
      */
-    fetchMovie("life").then((res) => {
-      if (res && res.Response === "True") {
-        setRecommendations(res.Search.slice(0, 5));
+    fetchMovie("life").then((res) => {//life filmi için api den veri ister veri gelince res içine koyar
+      if (res && res.Response === "True") { //veri geldiyse ve api başarılı cevap verdiyse çalışır
+        setRecommendations(res.Search.slice(0, 5));//gelen film listesinden ilk 5 filmi alır ve recommendations state'ine kaydeder.
       }
     });
 
@@ -80,24 +80,26 @@ export default function SearchScreen() {
    * fetchMovie:
    * RapidAPI üzerinden film verisi çeker.
    */
-  const fetchMovie = async (filmName) => {
+  const fetchMovie = async (filmName) => {//Film verisi çekmek için fonksiyon oluşturuyor async internetten veri bekleyecek demek
 
     const url = `https://movie-database-alternative.p.rapidapi.com/?s=${filmName}&r=json&page=1`;
 
     const options = {
-      method: "GET",
+      method: "GET",//veri çekmek istiyoruz o yüzden get 
       headers: {
         "x-rapidapi-key": "06f4e582b0msh1e7308013f2fc09p17a14bjsnb865cf6ef178",
         "x-rapidapi-host": "movie-database-alternative.p.rapidapi.com",
       },
     };
 
-    try {
-      const response = await fetch(url, options);
-      const json = await response.json();
-      return json;
+    try {/**
+     * try bu kodu dene hata olursa catch çalışsın
+     */
+      const response = await fetch(url, options);//fetch(url options)  api'ye istek gönderiyor
+      const json = await response.json();// response.json()  gelen veriyi JSON formatına çeviriyor.await cevabı bekle sonra devam et
+      return json;//apiden gelen veriyi fonksiyonu kullanan yere geri gönderir
     } catch (error) {
-      console.error(error);
+      console.error(error); //consolda error yazdırır
       return null;
     }
   };
@@ -110,37 +112,37 @@ export default function SearchScreen() {
          * SEARCH BAR
          */}
         <View style={styles.searchBar}>
-          <Feather name="search" size={18} color="#92929D" />
-          <TextInput
-            placeholder="Type title, categories, years, etc"
+          <Feather name="search" size={18} color="#92929D" /> {/**arama ikonu  */}
+          <TextInput // kullanıcının yazı yazdığı alan 
+            placeholder="Type title, categories, years, etc" // kullanıcı metin girmeden önce gözüken kısım
             placeholderTextColor={"#92929D"}
             style={styles.input}
-            value={searchText}
-            onChangeText={setSearchText}
+            value={searchText} // kullanıcının yazdığı metni state'ten alır  searchText kullanıcın yazdığını tutan hafıza
+            onChangeText={setSearchText} // kullanıcı yazdıkça state güncellenir
           />
         </View>
 
         {/**
-         * CATEGORY SCROLL
+         * kategori
          */}
         <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.categories}
+          horizontal // kategoriler yan yana 
+          showsHorizontalScrollIndicator={false} // alttaki scroll barı kapatır
+          contentContainerStyle={styles.categories} // kategori kısmının stilini ayarlar
         >
-          {categories.map((cat) => (
+          {categories.map((cat) => ( //categories dizisindeki her öğe için bir buton oluşturur
             <TouchableOpacity
               key={cat}
               style={[
                 styles.categoryButton,
-                selectedCategory === cat && styles.activeCategoryButton,
+                selectedCategory === cat && styles.activeCategoryButton, //eğer kategori seçiliyse özel stil uygular, seçilmemişse normal stil
               ]}
-              onPress={() => setSelectedCategory(cat)}
+              onPress={() => setSelectedCategory(cat)} //kullanıcı tıkladığında seçilen kategori değişir ve ekran yenilenir
             >
               <Text
                 style={[
                   styles.categoryText,
-                  selectedCategory === cat && styles.activeCategoryText,
+                  selectedCategory === cat && styles.activeCategoryText, //butonun içindeki yazı gösterilir seçiliyse yazının rengi değişir
                 ]}
               >
                 {cat}
@@ -150,19 +152,19 @@ export default function SearchScreen() {
         </ScrollView>
 
         {/**
-         * TODAY MOVIE SECTION
+         * today 
          */}
         <Text style={styles.sectionTitle}>Today</Text>
 
-        {todayMovie && (
-          <TouchableOpacity
+        {todayMovie && ( //eğer todayMovie varsa kart gösterilir yoksa hiç bir şey göstermez
+          <TouchableOpacity 
             style={styles.todayCard}
             onPress={() =>
-              navigation.navigate("MovieDetail", { movie: todayMovie })
+              navigation.navigate("MovieDetail", { movie: todayMovie }) // karta tıklandığında moviedetail sayfasına gider
             }
           >
             <Image
-              source={{ uri: todayMovie.Poster }}
+              source={{ uri: todayMovie.Poster }} // resimleri apiden alır
               style={styles.todayImage}
             />
 
@@ -173,11 +175,11 @@ export default function SearchScreen() {
 
               <Text style={styles.todayTitle}>
                 {todayMovie.Title.length > 20
-                  ? todayMovie.Title.slice(0, 20) + ".."
+                  ? todayMovie.Title.slice(0, 20) + ".." //eğer başlık 20 karakterden uzun ise sadece ilk 20 karakteri gösterir ve sonuna .. ekler kısa ise tamamını gösterir
                   : todayMovie.Title}
               </Text>
 
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}> {/**içindeki ikon ve yazıyı yatay sıraya dizer ve dikeyde ortalar */}
                 <Ionicons name="calendar" size={16} color="#9FA5C0" />
                 <Text style={styles.movieDetails}>2021</Text>
               </View>
@@ -212,9 +214,6 @@ export default function SearchScreen() {
           </TouchableOpacity>
         )}
 
-        {/**
-         * RECOMMEND SECTION
-         */}
         <View style={styles.recommendRow}>
           <Text style={styles.sectionTitle}>Recommend For You</Text>
           <TouchableOpacity>
@@ -222,14 +221,11 @@ export default function SearchScreen() {
           </TouchableOpacity>
         </View>
 
-        {/**
-         * Custom Widget
-         * HomeSliderWidget reusable component
-         */}
-        <HomeSliderWidget
-          data={recommendations}
-          title="Recommend For You"
-          description={true}
+    
+        <HomeSliderWidget // önerilen filmleri yatay kaydırmalı bir slider olarak gösteren bir bileşen (component) ve başlık ile açıklama ekler
+          data={recommendations}//sliderda hangi filmler gösterilecek
+          title="Recommend For You"//sliderın üstündeki başlık yazısı
+          description={true}//filmlerin altında açıklama gösterilsin mi evet
         />
 
       </ScrollView>

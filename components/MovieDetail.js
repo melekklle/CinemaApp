@@ -15,36 +15,26 @@ import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
 
-export default function Wishlist(props) {
+export default function Wishlist(props) { //wishlist ekranını dışarıdan kullanılabilir yapar ve başka ekrandan gelen verileri (props) almasını sağlar
 
-  /**
-   * Navigation hook
-   */
   const navigation = useNavigation();
-
+  //ekranlar arası geçiş
   /**
-   * Route params üzerinden gelen film verisi
-   * HomeScreen -> navigation.navigate("Wishlist", { movie: item })
+   * route params üzerinden gelen film verisi
+   * HomeScreen navigation.navigate("Wishlist", { movie: item })
    */
-  const movie = props?.route?.params?.movie;
+  const movie = props?.route?.params?.movie; //başka ekrandan gönderilen film bilgisini güvenli şekilde alıp movie değişkenine kaydeder
 
-  /**
-   * Share modal visibility state
-   */
-  const [showShareModal, setShowShareModal] = useState(false);
-
-  /**
-   * useEffect:
-   * Bu ekran açıldığında tab bar stilini değiştirir.
-   * Unmount olduğunda eski haline getirir.
-   */
+  const [showShareModal, setShowShareModal] = useState(false); //const : sabit değer.
   useEffect(() => {
-
+{/**bu ekran açılınca üst navigation ayarlarını değiştiriyor (şu an boş )*/}
     navigation.getParent()?.setOptions({});
-
-    return () => {
-      navigation.getParent()?.setOptions({
-        tabBarStyle: {
+//getParent()  üst navigation'a ulaşır 
+//setOptions()  navigation ayarlarını değiştirir 
+//?  hata olmasın diye kontrol eder
+    return () => { // kullanıcı bu ekrandan cıktıktan sonra çalışır
+      navigation.getParent()?.setOptions({ //krandan çıkarken navigation ayarlarını tekrar değiştirir
+        tabBarStyle: { //alt menünün (tab bar) görünümünü ayarlar
           backgroundColor: '#1F1D2B',
           borderTopWidth: 0,
           height: 65,
@@ -55,13 +45,7 @@ export default function Wishlist(props) {
     };
 
   }, [navigation]);
-
-  /**
-   * Cast data:
-   * Örnek sabit veri.
-   * Normalde API’den gelmesi gerekir.
-   */
-  const castData = [
+  const castData = [ //sabit veriler
     { id: '1', name: 'Dario Russo', role: 'Director', image: require("../assets/Image.png") },
     { id: '2', name: 'Dario Russo', role: 'Director and Writer', image: require("../assets/Image.png") },
     { id: '3', name: 'David Ashby', role: 'Writer', image: require("../assets/Image.png") },
@@ -71,36 +55,24 @@ export default function Wishlist(props) {
 
   return (
     <View style={styles.container}>
-
       <ScrollView>
-
-        {/**
-         * ARKA PLAN POSTER
-         * Blur efekti uygulanmış
-         */}
-        <BlurView intensity={100} tint="dark" style={styles.backgroundPoster}>
+        <BlurView intensity={100} tint="dark" style={styles.backgroundPoster}> {/**arka plan posteri blurlu  */}
           <Image
-            source={{ uri: movie?.Poster }}
+            source={{ uri: movie?.Poster }} // resmi apiden çeker
             style={styles.backgroundPoster}
-            resizeMode="cover"
+            resizeMode="cover" //resmin alanı tamamen kaplamasını sağlar gerekirse resmi kırpar ama boşluk bırakmaz
           />
         </BlurView>
 
         {/**
-         * LinearGradient:
-         * Poster üstüne koyu geçiş efekti verir.
+         * LinearGradient:Poster üstüne koyu geçiş efekti verir*
          */}
         <LinearGradient
           colors={['transparent', 'rgba(31,29,43,0.8)', 'rgba(31,29,43,1)']}
           style={styles.backgroundLinear}
         >
-
-          {/**
-           * HEADER ROW
-           * Geri butonu + Başlık + Favori
-           */}
           <View style={styles.headerRow}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
+            <TouchableOpacity onPress={() => navigation.goBack()}> {/**geri butonu */}
               <Ionicons name="arrow-back" size={24} color={"white"} />
             </TouchableOpacity>
 
@@ -111,21 +83,14 @@ export default function Wishlist(props) {
             </TouchableOpacity>
           </View>
 
-          {/**
-           * Film Poster Görseli
-           */}
-          <View style={styles.posterContainer}>
+          <View style={styles.posterContainer}> {/*film posteri  */}
             <Image
-              source={{ uri: movie?.Poster }}
+              source={{ uri: movie?.Poster }} // resmi apiden alır 
               style={styles.poster}
-              resizeMode='cover'
+              resizeMode='cover' //resmin alanı tamamen kaplamasını sağlar gerekirse resmi kırpar ama boşluk bırakmaz
             />
           </View>
-
-          {/**
-           * Film Bilgi Satırı
-           * Yıl, Süre, Tür
-           */}
+          {/**film bilgileri  */}
           <View style={styles.infoRow}>
             <View style={styles.infoItem}>
               <Ionicons name="calendar" size={16} color="#9FA5C0" />
@@ -142,20 +107,13 @@ export default function Wishlist(props) {
               <Text style={styles.infoText}>Action</Text>
             </View>
           </View>
-
-          {/**
-           * Rating Badge
-           */}
+          {/**film puan bilgisi  */}
           <View style={styles.ratingContainer}>
             <View style={styles.ratingBadge}>
               <Text style={styles.ratingText}>★ 4.5</Text>
             </View>
           </View>
-
-          {/**
-           * Action Buttons:
-           * Play - Download - Share
-           */}
+          {/**butonlar  */}
           <View style={styles.buttonsRow}>
 
             <TouchableOpacity style={styles.playButton}>
@@ -169,17 +127,14 @@ export default function Wishlist(props) {
 
             <TouchableOpacity
               style={styles.iconButton}
-              onPress={() => setShowShareModal(true)}
+              onPress={() => setShowShareModal(true)}  // butona basınca paylaş kısmıa açılır 
             >
-              <Feather name="share" size={20} color="#12CDD9" />
+              <Feather name="share" size={20} color="#12CDD9" /> {/**paylaş ikonu  */}
             </TouchableOpacity>
 
           </View>
         </LinearGradient>
 
-        {/**
-         * STORY LINE SECTION
-         */}
         <View style={styles.storySection}>
           <Text style={styles.storyTitle}>Story Line</Text>
           <Text style={styles.storyText}>
@@ -187,20 +142,16 @@ export default function Wishlist(props) {
           </Text>
         </View>
 
-        {/**
-         * CAST & CREW SECTION
-         * Horizontal FlatList
-         */}
         <View style={styles.storySection}>
           <Text style={styles.storyTitle}>Cast And Crew</Text>
 
           <FlatList
-            data={castData}
-            keyExtractor={(item) => item.id}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            renderItem={({ item }) => (
-              <View style={styles.castItem}>
+            data={castData} // castDatadan kullancıları çeker
+            keyExtractor={(item) => item.id} // her birine farklı id verir
+            horizontal // yan yana sıralar
+            showsHorizontalScrollIndicator={false} //alttaki scroll kısmını kapatır 
+            renderItem={({ item }) => ( // listedeki tüm kişilere bu stilleri ver
+              <View style={styles.castItem}> {/**kişilerin dış çerçevesi  */} 
                 <Image source={item.image} style={styles.castImage} />
                 <View style={styles.castTextContainer}>
                   <Text style={styles.header}>{item.name}</Text>
@@ -213,19 +164,15 @@ export default function Wishlist(props) {
 
       </ScrollView>
 
-      {/**
-       * SHARE MODAL
-       * showShareModal true ise render edilir.
-       */}
-      {showShareModal && (
-        <View style={styles.absoluteOverlay}>
-          <BlurView intensity={80} tint="dark" style={styles.fullScreenBlur}>
+      {showShareModal && (//eğer showShareModal true ise paylaşım penceresi görünür false ise hiç görünmez burda true
+        <View style={styles.absoluteOverlay}> {/*ekranın üstüne çıkan karartılmış arka plan (modal arkası).*/}
+          <BlurView intensity={80} tint="dark" style={styles.fullScreenBlur}> {/**arka planı bulanık yapar */}
 
             <View style={styles.shareBox}>
 
               <TouchableOpacity
                 style={styles.closeButton}
-                onPress={() => setShowShareModal(false)}
+                onPress={() => setShowShareModal(false)}// butona basınca modal kapanır
               >
                 <Ionicons name="close" size={30} color={'white'} />
               </TouchableOpacity>
