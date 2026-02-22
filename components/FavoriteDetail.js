@@ -7,7 +7,17 @@
  */
 
 import { useState,useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, FlatList, Image } from "react-native";
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  TouchableOpacity, 
+  ScrollView, 
+  FlatList, 
+  Image,
+  SafeAreaView,
+  StatusBar
+} from "react-native";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -25,15 +35,18 @@ export default function Favorite(props) {
    **/
   const movie = props?.route?.params?.movie;
 /**props: sayafaya gelen tüm bilgiler. route: hangi sayfadan ve gönderilen verileri tutar.params: gönderilen verinin olduğu yer */
+
   /**
    * showShareModal paylaşım modalını açıp kapatmak için boolean state
    */
   const [showShareModal, setShowShareModal] = useState(false);
 
 
-  useEffect(() => { /**useEffect ekran açılınca çalışır navigation.getParent() üst ekranı bulur setOptions() ise o ekranın ayarlarını değiştirir */
+  useEffect(() => { 
+    /**useEffect ekran açılınca çalışır navigation.getParent() üst ekranı bulur setOptions() ise o ekranın ayarlarını değiştirir */
     navigation.getParent()?.setOptions({});
-    return () => { /**sayfaya girince tab bar ayarı değişiyor sayfadan çıkınca eski ayar geri yükleniyor */
+    return () => { 
+      /**sayfaya girince tab bar ayarı değişiyor sayfadan çıkınca eski ayar geri yükleniyor */
       navigation.getParent()?.setOptions({
         tabBarStyle: {
           backgroundColor: '#1F1D2B',
@@ -55,7 +68,9 @@ export default function Favorite(props) {
   ];
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      
+      <StatusBar barStyle="light-content" />
 
       {/*sayfa scroll edilebilir */}
       <ScrollView>
@@ -75,11 +90,20 @@ export default function Favorite(props) {
         {/**
          * LinearGradient yukarıdan aşağıya kararma efekti*
          */}
-        <LinearGradient colors={['transparent', 'rgba(31,29,43,0.8)', 'rgba(31,29,43,1)']} style={styles.backgroundLinear}>
+        <LinearGradient 
+          colors={['transparent', 'rgba(31,29,43,0.8)', 'rgba(31,29,43,1)']} 
+          style={styles.backgroundLinear}
+        >
 
           {/* Header */}
           <View style={styles.headerRow}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
+            <TouchableOpacity 
+              onPress={() => {
+                if (navigation.canGoBack()) {
+                  navigation.goBack();
+                }
+              }}
+            >
               <Ionicons name="arrow-back" size={24} color={"white"} />
             </TouchableOpacity>
 
@@ -139,7 +163,10 @@ export default function Favorite(props) {
             {/**
              * share butonu state true yaparak modal açar.
              */}
-            <TouchableOpacity style={styles.iconButton} onPress={() => setShowShareModal(true)}>
+            <TouchableOpacity 
+              style={styles.iconButton} 
+              onPress={() => setShowShareModal(true)}
+            >
               <Feather name="share" size={20} color="#12CDD9" />
             </TouchableOpacity>
           </View>
@@ -161,12 +188,12 @@ export default function Favorite(props) {
            * FlatList  Performanslı liste render eder.
            */}
           <FlatList
-            data={castData} // castData daki kişileri ekrana basar 
-            keyExtractor={(item) => item.id} // her kişiye özel id 
-            horizontal // liste yan yana kayar  
-            showsHorizontalScrollIndicator={false} // alttaki scroll cizgisini gizler 
-            contentContainerStyle={{ paddingVertical: 10 }} // listenin  altına üstüne bosluk 
-            renderItem={({ item }) => ( // listedeki yüm kişilere bu stilleri ver
+            data={castData}
+            keyExtractor={(item) => item.id}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ paddingVertical: 10 }}
+            renderItem={({ item }) => (
               <View style={styles.castItem}>
                 <Image source={item.image} style={styles.castImage} />
                 <View style={styles.castTextContainer}>
@@ -179,13 +206,16 @@ export default function Favorite(props) {
         </View>
       </ScrollView>
 
-      {showShareModal && ( //paylaşım penceresinin (modalın) açılıp kapanmasını kontrol eden değeri değiştirir
-        <View style={styles.absoluteOverlay}> {/**popup arka planı  */}
-          <BlurView intensity={80} tint="dark" style={styles.fullScreenBlur}> {/**arka planı bulanık yapar */}
+      {showShareModal && (
+        <View style={styles.absoluteOverlay}>
+          <BlurView intensity={80} tint="dark" style={styles.fullScreenBlur}>
             <View style={styles.shareBox}>
 
               {/* Modal Kapatma */}
-              <TouchableOpacity style={styles.closeButton} onPress={() => setShowShareModal(false)}> {/**butona basınca popup kapanır  */}
+              <TouchableOpacity 
+                style={styles.closeButton} 
+                onPress={() => setShowShareModal(false)}
+              >
                 <Ionicons name="close" size={30} color={'white'} />
               </TouchableOpacity>
 
@@ -203,7 +233,7 @@ export default function Favorite(props) {
           </BlurView>
         </View>
       )}
-    </View>
+    </SafeAreaView>
   );
 }
 {/**stiller */}

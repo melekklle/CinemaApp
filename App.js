@@ -188,10 +188,10 @@ export default function App() { // App bileşeni, uygulamanın root componenti
                   renderTabIcon(route.name, focused), 
               })}
             >
-              <Tab.Screen name="Home" component={HomeStack} /> {/* Home tab */}
-              <Tab.Screen name="Search" component={SearchStack} /> {/* Search tab */}
-              <Tab.Screen name="Download" component={DownloadStack} /> {/* Download tab */}
-              <Tab.Screen name="Profile" component={ProfileStack} /> {/* Profile tab */}
+              <Tab.Screen name="Home" component={HomeStack} /> 
+              <Tab.Screen name="Search" component={SearchStack} /> 
+              <Tab.Screen name="Download" component={DownloadStack} />
+              <Tab.Screen name="Profile" component={ProfileStack} /> 
             </Tab.Navigator>
           </NavigationContainer>
         </SafeAreaView>

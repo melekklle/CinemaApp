@@ -13,7 +13,8 @@ import React, { useState, useEffect } from "react";
 import {View,Text,ScrollView,StyleSheet,Image,TouchableOpacity,} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 export default function ProfileScreen() {
-
+const [data, setData] = useState(null);
+const [loading, setLoading] = useState(true);
   useEffect(() => {
 
     const fetchData = async () => {//api den veri çeken bir fonksiyon oluşturuyor

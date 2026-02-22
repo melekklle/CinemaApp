@@ -136,7 +136,7 @@ başlangıçta false  yani henüz tıklanmadı
     favorites.some((item) => item.imdbID === movie.imdbID);//item.imdbID === movie.imdbID  film ID'si eşleşiyorsa true döner
     //favorites.some(...)  favorites array'inde en az bir eleman eşleşiyor mu diye bakar
     //Bu film favori mi? sorusuna true/false döndürüyor 
-  if (!fontLoaded) return <Text>Loading...</Text>;
+
 
 
   return (//return ekranda ne gösterileceğini döndürür

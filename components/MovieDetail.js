@@ -6,6 +6,7 @@
  * - Film detaylarını gösterir
  * - Blur + LinearGradient ile görsel efekt uygular
  * - Share modal açıp kapatır
+ * - SafeAreaView eklenmiştir
  */
 
 import { useState, useEffect} from "react";
@@ -14,6 +15,7 @@ import { Feather, Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
+import { SafeAreaView } from "react-native-safe-area-context"; // SafeAreaView eklendi
 
 export default function Wishlist(props) { //wishlist ekranını dışarıdan kullanılabilir yapar ve başka ekrandan gelen verileri (props) almasını sağlar
 
@@ -27,11 +29,11 @@ export default function Wishlist(props) { //wishlist ekranını dışarıdan kul
 
   const [showShareModal, setShowShareModal] = useState(false); //const : sabit değer.
   useEffect(() => {
-{/**bu ekran açılınca üst navigation ayarlarını değiştiriyor (şu an boş )*/}
+    {/**bu ekran açılınca üst navigation ayarlarını değiştiriyor (şu an boş )*/}
     navigation.getParent()?.setOptions({});
-//getParent()  üst navigation'a ulaşır 
-//setOptions()  navigation ayarlarını değiştirir 
-//?  hata olmasın diye kontrol eder
+    //getParent()  üst navigation'a ulaşır 
+    //setOptions()  navigation ayarlarını değiştirir 
+    //?  hata olmasın diye kontrol eder
     return () => { // kullanıcı bu ekrandan cıktıktan sonra çalışır
       navigation.getParent()?.setOptions({ //krandan çıkarken navigation ayarlarını tekrar değiştirir
         tabBarStyle: { //alt menünün (tab bar) görünümünü ayarlar
@@ -54,7 +56,7 @@ export default function Wishlist(props) { //wishlist ekranını dışarıdan kul
   ];
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}> {/* SafeAreaView eklendi */}
       <ScrollView>
         <BlurView intensity={100} tint="dark" style={styles.backgroundPoster}> {/**arka plan posteri blurlu  */}
           <Image
@@ -163,8 +165,8 @@ export default function Wishlist(props) { //wishlist ekranını dışarıdan kul
         </View>
 
       </ScrollView>
-
-      {showShareModal && (//eğer showShareModal true ise paylaşım penceresi görünür false ise hiç görünmez burda true
+      {/*eğer showShareModal true ise paylaşım penceresi görünür false ise hiç görünmez burda true*/}
+      {showShareModal && (
         <View style={styles.absoluteOverlay}> {/*ekranın üstüne çıkan karartılmış arka plan (modal arkası).*/}
           <BlurView intensity={80} tint="dark" style={styles.fullScreenBlur}> {/**arka planı bulanık yapar */}
 
@@ -191,10 +193,11 @@ export default function Wishlist(props) { //wishlist ekranını dışarıdan kul
         </View>
       )}
 
-    </View>
+    </SafeAreaView>
   );
 }
 
+// STYLES KODU AYNEN KORUNDU
 const styles = StyleSheet.create({
   container: { 
     flex: 1,

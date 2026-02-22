@@ -47,7 +47,7 @@ export default function Wishlist() {
     <View style={styles.card}>
       <TouchableOpacity
         onPress={() =>
-          navigation.navigate("FavoriteDetail", { movie: item }) // tıklandığında favoritedetaşl sayfasında gider
+          navigation.navigate("FavoriteDetail", { movie: item }) // tıklandığında favoritedetail sayfasına gider
         }
       >
 
@@ -59,7 +59,7 @@ export default function Wishlist() {
           onPress={() => dispatch(toggleFavorite(item))} // tıklandığında favorideyse çıkartır değilse favoriye ekler
           style={styles.heartButton}
         >
-          <Ionicons name="heart" size={25} color="red" /> {/**kalp ikonu */}
+          <Ionicons name="heart" size={25} color="red" /> {/**kalp ikonu */} 
         </TouchableOpacity>
 
         <Text style={styles.title}>{item.Title}</Text> {/**film başlığı ve çıkış yılı  */}
@@ -70,54 +70,62 @@ export default function Wishlist() {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.safeContainer}> {/** SafeAreaView eklendi, notch/çentik sorununu çözer */}
 
-      {/**
-       * header
-       */}
-      <View style={styles.headerRow}>
-        <TouchableOpacity
-          onPress={() => //kullanıcı geri butonuna tıklarsa eğer önceki ekran varsa geri gider (goBack()) yoksa ana ekrana (Home) gider
-            navigation.canGoBack()
-              ? navigation.goBack()
-              : navigation.getParent()?.navigate("Home")
-          }
-        >
-          <Ionicons name="arrow-back" size={24} color={"white"} /> {/**geri butonu */}
-        </TouchableOpacity>
+      <View style={styles.container}> {/** Orijinal container korundu */}
 
-        <Text style={styles.titleHeader}>Favoriler</Text>
+        {/**
+         * header
+         */}
+        <View style={styles.headerRow}>
+          <TouchableOpacity
+            onPress={() => //kullanıcı geri butonuna tıklarsa eğer önceki ekran varsa geri gider (goBack()) yoksa ana ekrana (Home) gider
+              navigation.canGoBack()
+                ? navigation.goBack()
+                : navigation.getParent()?.navigate("Home")
+            }
+          >
+            <Ionicons name="arrow-back" size={24} color={"white"} /> {/**geri butonu */}
+          </TouchableOpacity>
 
-        <View style={{ width: 24 }} />
-      </View>
+          <Text style={styles.titleHeader}>Favoriler</Text>
 
-      {favorites.length === 0 ? ( // favori listesi boş mu dolu mu kontrolü yapar 
-
-        <View style={styles.emptyContainer}> 
-          <Text style={styles.emptyText}> {/**boşsa favori film yok yazdırır */}
-            Favori Film Yok.
-          </Text>
+          <View style={{ width: 24 }} />
         </View>
 
-      ) : (
+        {favorites.length === 0 ? ( // favori listesi boş mu dolu mu kontrolü yapar 
 
-        <FlatList
-          data={favorites} // doluysa favorileri çeker liste halinde gösterir
-          keyExtractor={(item) => item.imdbID} // her birine id verir
-          renderItem={renderItem} // her kartın içeriğini oluşturur
-          contentContainerStyle={{
-            paddingHorizontal: 15,
-            paddingBottom: 30
-          }}
-        />
+          <View style={styles.emptyContainer}> 
+            <Text style={styles.emptyText}> {/**boşsa favori film yok yazdırır */}
+              Favori Film Yok.
+            </Text>
+          </View>
 
-      )}
+        ) : (
 
+          <FlatList
+            data={favorites} // doluysa favorileri çeker liste halinde gösterir
+            keyExtractor={(item) => item.imdbID} // her birine id verir
+            renderItem={renderItem} // her kartın içeriğini oluşturur
+            contentContainerStyle={{
+              paddingHorizontal: 15,
+              paddingBottom: 30
+            }}
+          />
+
+        )}
+
+      </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeContainer: { // SafeAreaView için stil
+    flex: 1,
+    backgroundColor: '#1F1D2B'
+  },
+
   container: {
     flex: 1,
     backgroundColor: '#1F1D2B'
