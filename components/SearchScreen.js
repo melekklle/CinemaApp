@@ -127,7 +127,8 @@ export default function SearchScreen() {
          */}
         <ScrollView
           horizontal // kategoriler yan yana 
-          showsHorizontalScrollIndicator={false} // alttaki scroll barı kapatır
+          // alttaki scroll barı kapatır
+          showsHorizontalScrollIndicator={false} 
           contentContainerStyle={styles.categories} // kategori kısmının stilini ayarlar
         >
           {categories.map((cat) => ( //categories dizisindeki her öğe için bir buton oluşturur
@@ -155,8 +156,8 @@ export default function SearchScreen() {
          * today 
          */}
         <Text style={styles.sectionTitle}>Today</Text>
-
-        {todayMovie && ( //eğer todayMovie varsa kart gösterilir yoksa hiç bir şey göstermez
+          {/**eğer todayMovie varsa kart gösterilir yoksa hiç bir şey göstermez */}
+        {todayMovie && ( 
           <TouchableOpacity 
             style={styles.todayCard}
             onPress={() =>
@@ -221,13 +222,12 @@ export default function SearchScreen() {
           </TouchableOpacity>
         </View>
 
-    
-        <HomeSliderWidget // önerilen filmleri yatay kaydırmalı bir slider olarak gösteren bir bileşen (component) ve başlık ile açıklama ekler
-          data={recommendations}//sliderda hangi filmler gösterilecek
-          title="Recommend For You"//sliderın üstündeki başlık yazısı
-          description={true}//filmlerin altında açıklama gösterilsin mi evet
+   
+        <HomeSliderWidget 
+          data={recommendations}
+          title="Recommend For You"
+          description={true}
         />
-
       </ScrollView>
     </SafeAreaView>
   );

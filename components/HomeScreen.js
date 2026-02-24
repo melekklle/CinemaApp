@@ -4,7 +4,6 @@
 
 import React, { useState, useEffect } from "react";
 import {View,Text,StyleSheet,FlatList,Dimensions,ScrollView,Image,TouchableOpacity,TextInput,StatusBar,} from "react-native";
-
 import * as Font from "expo-font";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -17,14 +16,14 @@ const WIDTH = Dimensions.get("window").width;
 
 
 const fetchFonts = () => {
-  return Font.loadAsync({/**exponun font paketi */
-    "montserrat-regular"/**kullandığım font ismi */: require("../assets/fonts/Montserrat-Regular.ttf"),/**font dosya yolu  */
+  return Font.loadAsync({
+    "montserrat-regular": require("../assets/fonts/Montserrat-Regular.ttf"),/**font dosya yolu  */
     "montserrat-bold": require("../assets/fonts/Montserrat-Bold.ttf"),
   });
-};
+};///**exponun font paketi *//**kullandığım font ismi */
 
 
-export default /*başka dosyaları import etmemi sağlar örn olarak import HomeScreen from './HomeScreen;'*/function HomeScreen(){
+export default function HomeScreen(){ {/**başka dosyaları import etmemi sağlar örn olarak import HomeScreen from './HomeScreen;' */}
   /**HomeScreen adında bir component oluşturur.Component:Uygulamanın küçük, bağımsız, tekrar kullanılabilir parçası. 
    * Legoya benzetebiliriz küçük parçalardan büyük yapı elde edilmesi*/
   const [fontLoaded, setFontLoaded] = useState(false);
